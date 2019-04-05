@@ -1,0 +1,63 @@
+plugins {
+    id "maven-publish"
+    id "java"
+    id 'java-gradle-plugin'
+    id "org.jetbrains.kotlin.jvm" version "1.3.21"
+}
+
+version "unspecified"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation gradleApi()
+
+    testImplementation "junit:junit:4.12"
+    testImplementation gradleTestKit()
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+gradlePlugin {
+    plugins {
+        agoPlugin {
+            id = 'se.eelde.ago'
+            implementationClass = 'se.eelde.ago.AgoPlugin'
+        }
+    }
+}
+
+task sourceJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allJava
+
+}
+
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId = 'se.eelde'
+            artifactId = project.name
+            version = 1 + "-SNAPSHOT"
+
+            from components.java
+
+            artifact sourceJar
+        }
+    }
+}
+

@@ -3,16 +3,15 @@ package se.eelde.ago
 import org.gradle.api.DefaultTask
 import org.gradle.api.internal.project.DefaultProject
 import org.gradle.api.tasks.TaskAction
-import se.eelde.ago.evaluators.CachingEnabledEvaluator
-import se.eelde.ago.evaluators.ConfigureOnDemandEvaluator
-import se.eelde.ago.evaluators.DaemonExecutionEvaluator
-import se.eelde.ago.evaluators.ParallelExecutionEvaluator
+import se.eelde.ago.evaluators.*
 import javax.inject.Inject
 
 
 open class AgoTask @Inject constructor(private var agoOutputter: AgoOutputter) : DefaultTask() {
     @TaskAction
     fun moduleTask() {
+
+        agoOutputter.greatInfo()
 
         val daemonExecutionEvaluator = DaemonExecutionEvaluator(project as DefaultProject)
 
@@ -45,6 +44,11 @@ open class AgoTask @Inject constructor(private var agoOutputter: AgoOutputter) :
         } else {
             agoOutputter.configureOnDemandUsed()
         }
+
+        val memoryEvaluator = MemoryEvaluator(project as DefaultProject)
+
+        val jvmMemory = memoryEvaluator.getMaxMemory / 1000000
+        agoOutputter.output("Defined Jvm Memory: $jvmMemory")
 
         // project.extensions.extraProperties["org.gradle.jvmargs"]
     }

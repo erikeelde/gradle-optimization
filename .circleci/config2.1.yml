@@ -17,6 +17,8 @@ workflows:
     jobs:
       - gradle/test:
           test_command: test
-          test_results_path: build/my-results/
-          reports_path: build/reports/
-
+          test_results_path: ago/build/test-results/test
+          reports_path: ago/build/reports/
+          store_artifacts:
+            path: ago/build/test-results/test
+            destination: Results

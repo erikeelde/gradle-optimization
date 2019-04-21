@@ -5,7 +5,12 @@ version: 2.1
 orbs:
   # Declare a dependency on the welcome-orb
   welcome: circleci/welcome-orb@0.3.1
-  gradle: bizzabo/gradle@2.2.0
+  gradle: circleci/gradle@1.0.11
+
+executors:
+  my-executor:
+    docker:
+      - image: 'circleci/openjdk:11'
 
 # Orchestrate or schedule a set of jobs, see https://circleci.com/docs/2.0/workflows/
 workflows:
@@ -14,6 +19,8 @@ workflows:
     # Run the welcome/run job in its own container
     jobs:
       - welcome/run
-  Checkout_build_project:
+
+  gradle_test:
     jobs:
-      - gradle/checkout_build_test
+      - gradle/test:
+          executor: my-executor

@@ -30,71 +30,16 @@ class AgoOutputter(var logger: Logger, defaultProject: DefaultProject) {
                 """.trimMargin())
     }
 
-    fun output(string: String) {
-        logger.log(LogLevel.LIFECYCLE, string)
+    internal fun printCheck(check: Check) {
+        val sb = StringBuilder()
+        sb.append("${check.link} \n")
+        check.hints.forEach { hint -> sb.append(" | $hint \n") }
+
+        logger.log(LogLevel.LIFECYCLE, sb.toString())
     }
 
-    fun parallelUsed() {
-        logger.log(LogLevel.LIFECYCLE,
-                """
-                    Using parallel :+1
-                """.trimIndent())
+    internal fun printPraise(check: Check) {
+        logger.log(LogLevel.LIFECYCLE, check.praise)
     }
 
-    fun useParallel() {
-        logger.log(LogLevel.LIFECYCLE,
-                """
-                    https://guides.gradle.org/performance/
-                     | If possible, enable org.gradle.parallel
-                     | Run with --parallel on the command-line
-                """.trimIndent())
-    }
-
-    fun cachingUsed() {
-        logger.log(LogLevel.LIFECYCLE,
-                """
-                    Using cache :+1
-                """.trimIndent())
-    }
-
-    fun useCaching() {
-        logger.log(LogLevel.LIFECYCLE,
-                """
-                    https://docs.gradle.org/current/userguide/build_cache.html
-                     | Make sure org.gradle.caching=true in your gradle.properties file
-                     | Run with --build-cache or --no-build-cache on the command-line
-                """.trimIndent())
-    }
-
-    fun daemonUsed() {
-        logger.log(LogLevel.LIFECYCLE,
-                """
-                   Using daemon :+1
-                """.trimIndent())
-    }
-
-    fun useDaemon() {
-        logger.log(LogLevel.LIFECYCLE,
-                """
-                   https://docs.gradle.org/current/userguide/gradle_daemon.html
-                    | Don't disable the daemon: org.gradle.daemon=false
-                    | Run with --daemon and --no-daemon on the command-line
-                """.trimIndent())
-    }
-
-    fun useConfigureOnDemand() {
-        logger.log(LogLevel.LIFECYCLE,
-                """
-                   https://docs.gradle.org/current/userguide/multi_project_builds.html#sec:configuration_on_demand
-                    | org.gradle.configureondemand=true
-                    | Run with --configure-on-demand, --no-configure-on-demand on the command-line
-                """.trimIndent())
-    }
-
-    fun configureOnDemandUsed() {
-        logger.log(LogLevel.LIFECYCLE,
-                """
-                    Using configure on demand :+1
-                """.trimIndent())
-    }
 }

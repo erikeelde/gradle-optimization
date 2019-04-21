@@ -3,8 +3,6 @@ version: 2.1
 
 # Use a package of configuration called an orb, see https://circleci.com/docs/2.0/orb-intro/
 orbs:
-  # Declare a dependency on the welcome-orb
-  welcome: circleci/welcome-orb@0.3.1
   gradle: circleci/gradle@1.0.11
 
 executors:
@@ -14,14 +12,11 @@ executors:
 
 # Orchestrate or schedule a set of jobs, see https://circleci.com/docs/2.0/workflows/
 workflows:
-  Welcome:
-    jobs:
-      - welcome/run
 
   build:
     jobs:
       - gradle/test:
-          test_command: myTests
+          test_command: test
           test_results_path: build/my-results/
           reports_path: build/reports/
 

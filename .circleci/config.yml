@@ -10,12 +10,28 @@ executors:
     docker:
       - image: 'circleci/openjdk:11'
 
-# Orchestrate or schedule a set of jobs, see https://circleci.com/docs/2.0/workflows/
-workflows:
+commands:
+  my-command:
+    steps:
+      - run: echo "lol"
 
-  build:
+jobs:
+  my-job:
+    executor: my-executor
+    steps:
+      - my-command
+
+workflows:
+  run_test:
     jobs:
       - gradle/test:
+          executor: my-executor
           test_command: test
           test_results_path: ago/build/test-results/test
           reports_path: ago/build/reports/
+
+      - gradle/run:
+          executor: my-executor
+          command: jar -x test
+          requires:
+            - gradle/test

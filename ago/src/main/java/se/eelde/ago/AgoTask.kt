@@ -8,9 +8,11 @@ import org.gradle.api.tasks.TaskAction
 import se.eelde.ago.evaluators.DaemonExecutionEvaluator
 import se.eelde.ago.evaluators.MemoryEvaluator
 import se.eelde.ago.evaluators.StartParameterEvaluator
-import javax.inject.Inject
 
-open class AgoTask @Inject constructor(private var agoOutputter: AgoOutputter) : DefaultTask() {
+open class AgoTask : DefaultTask() {
+
+    internal lateinit var agoOutputter: AgoOutputter
+
     @TaskAction
     fun moduleTask() {
 

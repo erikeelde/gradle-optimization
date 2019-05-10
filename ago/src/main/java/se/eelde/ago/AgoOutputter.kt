@@ -32,10 +32,21 @@ class AgoOutputter(var logger: Logger, defaultProject: DefaultProject) {
         sb.append("${check.link} \n")
         check.hints.forEach { hint -> sb.append(" | $hint \n") }
 
-        logger.log(LogLevel.LIFECYCLE, sb.toString())
+        when (check.aDefault) {
+            CheckSeverity.ENABLED_ENFORCED ->
+                styledTextOutput
+                        .style(StyledTextOutput.Style.Failure)
+                        .text(sb.toString())
+            CheckSeverity.ENABLED_RECOMMENDED ->
+                logger.log(LogLevel.LIFECYCLE, sb.toString())
+        }
     }
 
     internal fun printPraise(check: Check) {
         logger.log(LogLevel.LIFECYCLE, check.praise)
+    }
+
+    fun printRunningOnCi() {
+        logger.log(LogLevel.LIFECYCLE, "Build running on CI - ignoring gradle optimization-checks.")
     }
 }

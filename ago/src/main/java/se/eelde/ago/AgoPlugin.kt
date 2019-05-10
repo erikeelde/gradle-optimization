@@ -13,9 +13,16 @@ class AgoPlugin : Plugin<Project> {
 
         agoOutputter = AgoOutputter(defaultProject = (project as DefaultProject), logger = project.logger)
 
+        val ciChecker = CiChecker(System.getenv())
+
         extension = project.extensions.create("ago", AgoPluginExtension::class.java)
 
-        val agoTask = project.tasks.create("androidGradleOptimizations", AgoTask::class.java, agoOutputter)
+        if (ciChecker.isCi()) {
+            agoOutputter.printRunningOnCi()
+            return
+        }
+
+        val agoTask = project.tasks.create("androidGradleOptimizations", AgoTask::class.java) { task -> task.agoOutputter = agoOutputter }
 
         project.rootProject.afterEvaluate {
 
@@ -24,8 +31,6 @@ class AgoPlugin : Plugin<Project> {
                     task.dependsOn(agoTask)
                 }
             }
-
-            // DefaultServiceRegistry#L984
         }
     }
 }

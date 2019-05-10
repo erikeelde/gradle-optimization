@@ -12,7 +12,6 @@ class DaemonExecutionEvaluator(private val project: DefaultProject) {
             try {
                 return project.services.get(DaemonScanInfo::class.java)
             } catch (t: Throwable) {
-
             }
             return null
         }
@@ -22,7 +21,6 @@ class DaemonExecutionEvaluator(private val project: DefaultProject) {
             try {
                 return project.services.get(DaemonMemoryStatus::class.java)
             } catch (t: Throwable) {
-
             }
             return null
         }
@@ -32,7 +30,6 @@ class DaemonExecutionEvaluator(private val project: DefaultProject) {
             try {
                 return project.services.get(DaemonContext::class.java)
             } catch (t: Throwable) {
-
             }
             return null
         }
@@ -42,7 +39,6 @@ class DaemonExecutionEvaluator(private val project: DefaultProject) {
             try {
                 return project.services.get(DaemonRunningStats::class.java)
             } catch (t: Throwable) {
-
             }
             return null
         }

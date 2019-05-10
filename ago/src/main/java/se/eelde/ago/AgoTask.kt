@@ -10,7 +10,6 @@ import se.eelde.ago.evaluators.MemoryEvaluator
 import se.eelde.ago.evaluators.StartParameterEvaluator
 import javax.inject.Inject
 
-
 open class AgoTask @Inject constructor(private var agoOutputter: AgoOutputter) : DefaultTask() {
     @TaskAction
     fun moduleTask() {
@@ -27,7 +26,6 @@ open class AgoTask @Inject constructor(private var agoOutputter: AgoOutputter) :
             if (daemonCheck.aDefault == CheckSeverity.ENABLED_ENFORCED) {
                 optimizationsMissing = true
             }
-
         } else {
             agoOutputter.printPraise(daemonCheck)
         }

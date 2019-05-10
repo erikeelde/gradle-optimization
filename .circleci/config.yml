@@ -6,17 +6,20 @@ orbs:
 workflows:
   run_test:
     jobs:
+      - gradle/run:
+          name: Run ktLint
+          command: :ago:ktlint
+
       - gradle/test:
+          name: Run tests
           test_command: test
           test_results_path: ago/build/test-results/test
           reports_path: ago/build/reports/
-
-      - gradle/run:
-          command: jar -x test
           requires:
-            - gradle/test
+            - Run ktLint
 
       - gradle/run:
+          name: Test that publish works
           command: :ago:publishToMavenLocal
           requires:
-            - gradle/run
+            - Run tests

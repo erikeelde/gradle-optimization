@@ -25,7 +25,6 @@ internal class AgoPluginTest {
 
     @Test
     fun lol() {
-
     }
 
     @Test
@@ -47,6 +46,4 @@ internal class AgoPluginTest {
 
         assertEquals("4GB", agoPlugin.extension!!.mem)
     }
-
-
 }

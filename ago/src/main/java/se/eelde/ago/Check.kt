@@ -49,5 +49,4 @@ sealed class Check(val aDefault: CheckSeverity, val link: String, val hints: Lis
             link = "https://github.com/ben-manes/gradle-versions-plugin",
             hints = listOf("A way to monitor dependency updates is highly recommended"),
             praise = "Version update method detected :+1")
-
 }

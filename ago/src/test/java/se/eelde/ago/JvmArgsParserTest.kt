@@ -4,7 +4,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
 
-
 class JvmArgsParserTest {
 
     @Test
@@ -47,6 +46,4 @@ class JvmArgsParserTest {
         assertEquals(Charsets.UTF_8, jvmArgParser.parseFileEncoding("a -Dfile.encoding=UTF-8 a"))
         assertEquals(Charsets.UTF_8, jvmArgParser.parseFileEncoding("-Xmx2000m -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"))
     }
-
-
 }

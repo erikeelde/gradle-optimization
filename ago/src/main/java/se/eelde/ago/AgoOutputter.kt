@@ -6,7 +6,6 @@ import org.gradle.api.logging.Logger
 import org.gradle.internal.logging.text.StyledTextOutput
 import org.gradle.internal.logging.text.StyledTextOutputFactory
 
-
 class AgoOutputter(var logger: Logger, defaultProject: DefaultProject) {
 
     private val styledTextOutput: StyledTextOutput
@@ -18,8 +17,6 @@ class AgoOutputter(var logger: Logger, defaultProject: DefaultProject) {
                 .style(StyledTextOutput.Style.ProgressStatus).text("Eventually ")
                 .style(StyledTextOutput.Style.Failure).text("we will  ")
                 .style(StyledTextOutput.Style.Identifier).println("have teh color")
-
-
     }
 
     fun greatInfo() {
@@ -41,5 +38,4 @@ class AgoOutputter(var logger: Logger, defaultProject: DefaultProject) {
     internal fun printPraise(check: Check) {
         logger.log(LogLevel.LIFECYCLE, check.praise)
     }
-
 }

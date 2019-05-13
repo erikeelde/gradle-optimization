@@ -23,6 +23,7 @@ dependencies {
 
     testImplementation "junit:junit:4.12"
     testImplementation gradleTestKit()
+    testImplementation "com.google.truth:truth:0.44"
 }
 compileKotlin {
     kotlinOptions {

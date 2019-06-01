@@ -21,7 +21,10 @@ buildscript {
 apply plugin: 'se.eelde.ago'
 ```
 
+
 ### Specifics: 
+
+Dsl is [here](ago/src/test/java/se/eelde/ago/ParseDslTest.kt)
 
 Checks are [here](ago/src/main/java/se/eelde/ago/Check.kt)
 

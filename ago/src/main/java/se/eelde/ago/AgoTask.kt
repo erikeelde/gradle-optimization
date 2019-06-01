@@ -12,6 +12,7 @@ import se.eelde.ago.evaluators.StartParameterEvaluator
 open class AgoTask : DefaultTask() {
 
     internal lateinit var agoOutputter: AgoOutputter
+    internal lateinit var agoPluginExtension: AgoPluginExtension
 
     @TaskAction
     fun moduleTask() {
@@ -68,33 +69,35 @@ open class AgoTask : DefaultTask() {
 
         val jvmMemory = memoryEvaluator.getMaxMemory / 1000000
 
-        val jvmArgs = project.extensions.extraProperties["org.gradle.jvmargs"] as String
-        val jvmArgsParser = JvmArgsParser()
-        val parseMaxJmvMem = jvmArgsParser.parseMaxJmvMem(jvmArgs = jvmArgs)
-        val parseFileEncoding = jvmArgsParser.parseFileEncoding(jvmArgs = jvmArgs)
+        if (project.extensions.extraProperties.has("org.gradle.jvmargs")) {
+            val jvmArgs = project.extensions.extraProperties["org.gradle.jvmargs"]?.toString() ?: ""
+            val jvmArgsParser = JvmArgsParser()
+            val parseMaxJmvMem = jvmArgsParser.parseMaxJmvMem(jvmArgs = jvmArgs)
+            val parseFileEncoding = jvmArgsParser.parseFileEncoding(jvmArgs = jvmArgs)
 
-        agoOutputter.logger.log(LogLevel.DEBUG, "Defined Jvm Memory according to memoryEvaluator: $jvmMemory")
-        agoOutputter.logger.log(LogLevel.DEBUG, "jvmArgsParser mem: $parseMaxJmvMem")
-        agoOutputter.logger.log(LogLevel.DEBUG, "jvmArgsParser enc: $parseFileEncoding")
+            agoOutputter.logger.log(LogLevel.DEBUG, "Defined Jvm Memory according to memoryEvaluator: $jvmMemory")
+            agoOutputter.logger.log(LogLevel.DEBUG, "jvmArgsParser mem: $parseMaxJmvMem")
+            agoOutputter.logger.log(LogLevel.DEBUG, "jvmArgsParser enc: $parseFileEncoding")
 
-        val expectedJvmMemory = Check.Memory(Memory.Gigabyte(2))
-        if (parseMaxJmvMem.asBytes() < expectedJvmMemory.size.asBytes()) {
-            agoOutputter.printCheck(expectedJvmMemory)
-            if (expectedJvmMemory.aDefault == CheckSeverity.ENABLED_ENFORCED) {
-                optimizationsMissing = true
+            val expectedJvmMemory = Check.Memory(Memory.Gigabyte(2))
+            if (parseMaxJmvMem.asBytes() < expectedJvmMemory.size.asBytes()) {
+                agoOutputter.printCheck(expectedJvmMemory)
+                if (expectedJvmMemory.aDefault == CheckSeverity.ENABLED_ENFORCED) {
+                    optimizationsMissing = true
+                }
+            } else {
+                agoOutputter.printPraise(expectedJvmMemory)
             }
-        } else {
-            agoOutputter.printPraise(expectedJvmMemory)
-        }
 
-        val utF8FileEncodingCheck = Check.UTF8FileEncoding(Charsets.UTF_8)
-        if (parseFileEncoding != utF8FileEncodingCheck.charset) {
-            agoOutputter.printCheck(utF8FileEncodingCheck)
-            if (utF8FileEncodingCheck.aDefault == CheckSeverity.ENABLED_ENFORCED) {
-                optimizationsMissing = true
+            val utF8FileEncodingCheck = Check.UTF8FileEncoding(Charsets.UTF_8)
+            if (parseFileEncoding != utF8FileEncodingCheck.charset) {
+                agoOutputter.printCheck(utF8FileEncodingCheck)
+                if (utF8FileEncodingCheck.aDefault == CheckSeverity.ENABLED_ENFORCED) {
+                    optimizationsMissing = true
+                }
+            } else {
+                agoOutputter.printPraise(utF8FileEncodingCheck)
             }
-        } else {
-            agoOutputter.printPraise(utF8FileEncodingCheck)
         }
 
         val versionsUpdatePluginCheck = Check.VersionsPlugin()

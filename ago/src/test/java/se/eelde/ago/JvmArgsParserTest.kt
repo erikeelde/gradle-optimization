@@ -1,7 +1,6 @@
 package se.eelde.ago
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
+import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 
 class JvmArgsParserTest {
@@ -9,41 +8,41 @@ class JvmArgsParserTest {
     @Test
     fun testNoJvmMaxMem() {
         val jvmArgParser = JvmArgsParser()
-        assertEquals(Memory.UNDEFINED, jvmArgParser.parseMaxJmvMem(""))
-        assertEquals(Memory.UNDEFINED, jvmArgParser.parseMaxJmvMem("-XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError"))
+        assertThat(jvmArgParser.parseMaxJmvMem("")).isEqualTo(Memory.UNDEFINED)
+        assertThat(jvmArgParser.parseMaxJmvMem("-XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError")).isEqualTo(Memory.UNDEFINED)
     }
 
     @Test
     fun testMaxJvmMaxMem() {
         val jvmArgParser = JvmArgsParser()
-        assertEquals(Memory.Megabyte(2000), jvmArgParser.parseMaxJmvMem("-Xmx2000m"))
-        assertEquals(Memory.Megabyte(2000), jvmArgParser.parseMaxJmvMem("a -Xmx2000m a"))
-        assertEquals(Memory.Megabyte(2000), jvmArgParser.parseMaxJmvMem("-Xmx2000m -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=CRLF"))
+        assertThat(jvmArgParser.parseMaxJmvMem("-Xmx2000m")).isEqualTo(Memory.Megabyte(2000))
+        assertThat(jvmArgParser.parseMaxJmvMem("a -Xmx2000m a")).isEqualTo(Memory.Megabyte(2000))
+        assertThat(jvmArgParser.parseMaxJmvMem("-Xmx2000m -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=CRLF")).isEqualTo(Memory.Megabyte(2000))
     }
 
     @Test
     fun testMaxJvmMaxMem2() {
         val jvmArgParser = JvmArgsParser()
-        assertEquals(Memory.Kilobyte(1), jvmArgParser.parseMaxJmvMem("-Xmx1k"))
-        assertEquals(Memory.Kilobyte(2), jvmArgParser.parseMaxJmvMem("-Xmx2K"))
-        assertEquals(Memory.Megabyte(3), jvmArgParser.parseMaxJmvMem("-Xmx3m"))
-        assertEquals(Memory.Megabyte(4), jvmArgParser.parseMaxJmvMem("-Xmx4M"))
-        assertEquals(Memory.Gigabyte(5), jvmArgParser.parseMaxJmvMem("-Xmx5g"))
-        assertEquals(Memory.Gigabyte(6), jvmArgParser.parseMaxJmvMem("-Xmx6G"))
+        assertThat(jvmArgParser.parseMaxJmvMem("-Xmx1k")).isEqualTo(Memory.Kilobyte(1))
+        assertThat(jvmArgParser.parseMaxJmvMem("-Xmx2K")).isEqualTo(Memory.Kilobyte(2))
+        assertThat(jvmArgParser.parseMaxJmvMem("-Xmx3m")).isEqualTo(Memory.Megabyte(3))
+        assertThat(jvmArgParser.parseMaxJmvMem("-Xmx4M")).isEqualTo(Memory.Megabyte(4))
+        assertThat(jvmArgParser.parseMaxJmvMem("-Xmx5g")).isEqualTo(Memory.Gigabyte(5))
+        assertThat(jvmArgParser.parseMaxJmvMem("-Xmx6G")).isEqualTo(Memory.Gigabyte(6))
     }
 
     @Test
     fun testNoFileEncoding() {
         val jvmArgParser = JvmArgsParser()
-        assertNull(jvmArgParser.parseFileEncoding(""))
-        assertNull(jvmArgParser.parseFileEncoding("-XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError"))
+        assertThat(jvmArgParser.parseFileEncoding("")).isNull()
+        assertThat(jvmArgParser.parseFileEncoding("-XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError")).isNull()
     }
 
     @Test
     fun testFileEncoding() {
         val jvmArgParser = JvmArgsParser()
-        assertEquals(Charsets.UTF_8, jvmArgParser.parseFileEncoding("-Dfile.encoding=UTF-8"))
-        assertEquals(Charsets.UTF_8, jvmArgParser.parseFileEncoding("a -Dfile.encoding=UTF-8 a"))
-        assertEquals(Charsets.UTF_8, jvmArgParser.parseFileEncoding("-Xmx2000m -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"))
+        assertThat(jvmArgParser.parseFileEncoding("-Dfile.encoding=UTF-8")).isEqualTo(Charsets.UTF_8)
+        assertThat(jvmArgParser.parseFileEncoding("a -Dfile.encoding=UTF-8 a")).isEqualTo(Charsets.UTF_8)
+        assertThat(jvmArgParser.parseFileEncoding("-Xmx2000m -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8")).isEqualTo(Charsets.UTF_8)
     }
 }

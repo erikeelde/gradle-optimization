@@ -1,6 +1,7 @@
 plugins {
     id "java"
     id 'java-gradle-plugin'
+    id "com.gradle.plugin-publish" version "0.10.1"
     id "org.jetbrains.kotlin.jvm" version "1.3.31"
     id "maven-publish"
     id "signing"
@@ -12,7 +13,7 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 repositories {
-    mavenCentral()
+    jcenter()
 }
 
 apply from: "../ktlint.gradle"
@@ -36,15 +37,6 @@ compileTestKotlin {
     }
 }
 
-gradlePlugin {
-    plugins {
-        agoPlugin {
-            id = 'se.eelde.ago'
-            implementationClass = 'se.eelde.ago.AgoPlugin'
-        }
-    }
-}
-
 task javadocJar(type: Jar, dependsOn: javadoc) {
     archiveClassifier.set("javadoc")
 
@@ -60,6 +52,33 @@ artifacts {
     archives jar
     archives sourceJar
     archives javadocJar
+}
+
+// Use java-gradle-plugin to generate plugin descriptors and specify plugin ids
+gradlePlugin {
+    plugins {
+        agoPlugin {
+            id = 'se.eelde.ago'
+            implementationClass = 'se.eelde.ago.AgoPlugin'
+        }
+    }
+}
+
+// The configuration example below shows the minimum required properties
+// configured to publish your plugin to the plugin portal
+pluginBundle {
+    website = 'http://www.eelde.se/'
+    vcsUrl = 'https://github.com/erikeelde/android-gradle-optimization'
+    description = 'A plugin that verifies that optimizations are enabled on development machines.'
+    tags = ['optimization']
+
+    plugins {
+        agoPlugin {
+            // id is captured from java-gradle-plugin configuration
+            displayName = 'Gradle optimizations plugin'
+            version = '0.1'
+        }
+    }
 }
 
 publishing {

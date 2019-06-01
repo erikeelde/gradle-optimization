@@ -13,10 +13,6 @@ class AgoOutputter(var logger: Logger, defaultProject: DefaultProject) {
     init {
         val styledTextOutputFactory = defaultProject.services.get(StyledTextOutputFactory::class.java)
         styledTextOutput = styledTextOutputFactory.create("ago")
-        styledTextOutput
-                .style(StyledTextOutput.Style.ProgressStatus).text("Eventually ")
-                .style(StyledTextOutput.Style.Failure).text("we will  ")
-                .style(StyledTextOutput.Style.Identifier).println("have teh color")
     }
 
     fun greatInfo() {

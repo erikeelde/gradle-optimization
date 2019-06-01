@@ -139,34 +139,4 @@ org.gradle.caching=true
 
         assertThat(build.tasks.size).isEqualTo(0)
     }
-
-    @Test
-    fun `test manual optimizations bypass`() {
-        buildFile.writeText("""
-            plugins {
-                id 'se.eelde.ago'
-            }
-
-            ago {
-                skipOptimizationsEnvVar 'SKIP_IT'
-            }
-        """)
-
-        testProjectDir.newFile("gradle.properties").writeText("""
-org.gradle.parallel=false
-org.gradle.daemon=false
-org.gradle.configureondemand=false
-org.gradle.caching=false
-        """)
-
-        @Suppress("UnstableApiUsage")
-        val build = GradleRunner.create()
-                .withEnvironment(mapOf("SKIP_IT" to "true"))
-                .withProjectDir(testProjectDir.root)
-                .withArguments("androidGradleOptimizations")
-                .withPluginClasspath()
-                .build()
-
-        assertThat(build.tasks[0].outcome).isEqualTo(TaskOutcome.SUCCESS)
-    }
 }

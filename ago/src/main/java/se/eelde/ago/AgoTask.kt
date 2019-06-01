@@ -108,14 +108,8 @@ open class AgoTask : DefaultTask() {
             agoOutputter.printPraise(versionsUpdatePluginCheck)
         }
 
-        val noCrash = agoPluginExtension.shouldSkipOptimizations(System.getenv())
-
         if (optimizationsMissing) {
-            if (noCrash) {
-                agoOutputter.logger.log(LogLevel.LIFECYCLE, "Task not crashing because ${agoPluginExtension.skipOptimizationsEnvVar} is set to 'true'")
-            } else {
-                throw GradleException("Missing required optimizations - check logs")
-            }
+            throw GradleException("Missing required optimizations - check logs")
         }
     }
 }

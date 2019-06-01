@@ -31,7 +31,6 @@ internal class ParseDslTest {
 
             ago {
                 jvmMinMem '4GB'
-                skipOptimizationsEnvVar 'SKIP_IT'
             }
         """)
 
@@ -42,26 +41,6 @@ internal class ParseDslTest {
         val agoPluginExtension = agoPlugin.agoPluginExtension!!
 
         assertThat(agoPluginExtension.jvmMinMem).isEqualTo("4GB")
-        assertThat(agoPluginExtension.skipOptimizationsEnvVar).isEqualTo("SKIP_IT")
-    }
-
-    @Test
-    fun `verify that optimizations can be skipped`() {
-        buildFile.writeText("""
-            apply plugin: "se.eelde.ago"
-
-            ago {
-                skipOptimizationsEnvVar 'SKIP_IT'
-            }
-        """)
-
-        val project = ProjectBuilder.builder().withProjectDir(testProjectDir.root).build()
-        (project as DefaultProject).evaluate()
-
-        val agoPlugin = project.plugins.getPlugin(AgoPlugin::class.java) as AgoPlugin
-        val agoPluginExtension = agoPlugin.agoPluginExtension!!
-
-        assertThat(agoPluginExtension.skipOptimizationsEnvVar).isEqualTo("SKIP_IT")
     }
 
     @Test
@@ -69,10 +48,6 @@ internal class ParseDslTest {
         buildFile.writeText("""
             plugins {
                 id 'se.eelde.ago'
-            }
-
-            ago {
-                skipOptimizationsEnvVar 'SKIP_IT'
             }
         """)
 

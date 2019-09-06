@@ -1,16 +1,11 @@
 package se.eelde.ago
 
-import org.gradle.StartParameter
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.internal.project.DefaultProject
-import org.gradle.cache.CacheRepository
-import org.gradle.launcher.daemon.server.health.DaemonHealthStats
-import se.eelde.ago.evaluators.DaemonExecutionEvaluator
-import se.eelde.ago.evaluators.MemoryEvaluator
 
 class AgoPlugin : Plugin<Project> {
-    var extension: AgoPluginExtension? = null
+    var agoPluginExtension: AgoPluginExtension? = null
 
     lateinit var agoOutputter: AgoOutputter
 
@@ -18,37 +13,26 @@ class AgoPlugin : Plugin<Project> {
 
         agoOutputter = AgoOutputter(defaultProject = (project as DefaultProject), logger = project.logger)
 
-        extension = project.extensions.create("ago", AgoPluginExtension::class.java)
+        val ciChecker = CiChecker(System.getenv())
+        agoPluginExtension = project.extensions.create("ago", AgoPluginExtension::class.java)
 
-        project.tasks.create("androidGradleOptimizations", AgoTask::class.java, agoOutputter)
+        if (ciChecker.isCi()) {
+            agoOutputter.printRunningOnCi()
+            return
+        }
 
-        project.afterEvaluate {
+        val agoTask = project.tasks.create("androidGradleOptimizations", AgoTask::class.java) { task ->
+            task.agoOutputter = agoOutputter
+            task.agoPluginExtension = agoPluginExtension as AgoPluginExtension
+        }
 
-            project.extensions
+        project.rootProject.afterEvaluate {
 
-            agoOutputter.greatInfo()
-
-            val daemonExecutionEvaluator = DaemonExecutionEvaluator(project)
-
-            // agoOutputter.output("Is execution as daemon: ${!daemonExecutionEvaluator.isSingleUse}")
-
-            // agoOutputter.output("memory ${extension!!.mem}")
-
-            val memoryEvaluator = MemoryEvaluator(project)
-            val get = project.services.get(DaemonHealthStats::class.java)
-
-            agoOutputter.output("maxmem: ${Runtime.getRuntime().maxMemory()}")
-            agoOutputter.output("totalmem: ${Runtime.getRuntime().totalMemory()}")
-
-            project.run {
-                val lol1 = services.get(StartParameter::class.java)
-                val lol3 = services.get(CacheRepository::class.java)
-                // val lol6 = services.get(DaemonCommandExecution::class.java)
-                // agoOutputter.output("parallel: ${lol1.isParallelProjectExecutionEnabled}")
+            for (task in it.tasks) {
+                if (task != agoTask) {
+                    task.dependsOn(agoTask)
+                }
             }
-
-            // DefaultServiceRegistry#L984
-
         }
     }
 }

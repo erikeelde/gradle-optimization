@@ -1,0 +1,25 @@
+version: 2.1
+
+orbs:
+  gradle: circleci/gradle@1.0.11
+
+workflows:
+  run_test:
+    jobs:
+      - gradle/run:
+          name: Run ktLint
+          command: :ago:ktlint
+
+      - gradle/test:
+          name: Run tests
+          test_command: test
+          test_results_path: ago/build/test-results/test
+          reports_path: ago/build/reports/
+          requires:
+            - Run ktLint
+
+      - gradle/run:
+          name: Test that publish works
+          command: :ago:publishToMavenLocal
+          requires:
+            - Run tests

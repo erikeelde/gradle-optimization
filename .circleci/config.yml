@@ -8,7 +8,7 @@ workflows:
     jobs:
       - gradle/run:
           name: Run ktLint
-          command: :ago:ktlint
+          command: :ktlint
 
       - gradle/test:
           name: Run tests
@@ -20,6 +20,6 @@ workflows:
 
       - gradle/run:
           name: Test that publish works
-          command: :ago:publishToMavenLocal
+          command: :publishToMavenLocal
           requires:
             - Run tests

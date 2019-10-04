@@ -1,36 +1,34 @@
-# android-gradle-optimization
+# Gradle build optimizations
 
 A gradle plugin that will check to make sure some gradle performance optimizations are in place.
 Default configuration will crash if not all safe optimisations are in place.
 
 Check for output in the gradle build logs for helpful tips.
 
+Plugin published [here](https://plugins.gradle.org/plugin/se.eelde.build-optimizations)
+
 ##### Deploy:
 ```
-./gradlew :ago:publishMavenLocal
+./gradlew :publishMavenLocal
 ```
 
 ##### Test it:
 ```
-buildscript {
-    dependencies {
-        classpath 'se.eelde:ago:1-SNAPSHOT'
-    }
+plugins {
+  id("se.eelde.build-optimizations") version "0.1"
 }
-
-apply plugin: 'se.eelde.ago'
 ```
 
 
 ### Specifics: 
 
-Dsl is [here](ago/src/test/java/se/eelde/ago/ParseDslTest.kt)
+Dsl is [here](src/test/java/se/eelde/ago/ParseDslTest.kt)
 
-Checks are [here](ago/src/main/java/se/eelde/ago/Check.kt)
+Checks are [here](src/main/java/se/eelde/ago/Check.kt)
 
 * Daemon execution
 * Paralell Execution
 * Gradle caches
 * Configure on demand  
-* JvmMemory
+* JvmMemory 
 * Default File encoding

@@ -1,4 +1,4 @@
-package se.eelde.ago
+package se.eelde.build_optimization
 
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

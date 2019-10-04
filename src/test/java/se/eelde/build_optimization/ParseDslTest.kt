@@ -1,4 +1,4 @@
-package se.eelde.ago
+package se.eelde.build_optimization
 
 import com.google.common.truth.Truth.assertThat
 import org.gradle.api.internal.project.DefaultProject
@@ -28,7 +28,7 @@ internal class ParseDslTest {
         buildFile.writeText("""
             apply plugin: "se.eelde.ago"
 
-            ago {
+            buildOptimization {
                 jvmMinMem '4GB'
             }
         """)
@@ -36,10 +36,10 @@ internal class ParseDslTest {
         val project = ProjectBuilder.builder().withProjectDir(testProjectDir).build()
         (project as DefaultProject).evaluate()
 
-        val agoPlugin = project.plugins.getPlugin(AgoPlugin::class.java) as AgoPlugin
-        val agoPluginExtension = agoPlugin.agoPluginExtension!!
+        val buildOptimizationPlugin = project.plugins.getPlugin(BuildOptimizationPlugin::class.java) as BuildOptimizationPlugin
+        val buildOptimizationPluginExtension = buildOptimizationPlugin.buildOptimizationPluginExtension!!
 
-        assertThat(agoPluginExtension.jvmMinMem).isEqualTo("4GB")
+        assertThat(buildOptimizationPluginExtension.jvmMinMem).isEqualTo("4GB")
     }
 
     @Test

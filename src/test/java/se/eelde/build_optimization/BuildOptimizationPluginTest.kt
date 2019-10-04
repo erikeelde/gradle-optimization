@@ -1,4 +1,4 @@
-package se.eelde.ago
+package se.eelde.build_optimization
 
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
 
-internal class AgoPluginTest {
+internal class BuildOptimizationPluginTest {
 
     @TempDir
     lateinit var testProjectDir: File
@@ -23,6 +23,76 @@ internal class AgoPluginTest {
                 id 'se.eelde.ago'
             }
         """)
+        }
+    }
+
+    @Test
+    fun `test jvmstuf2f result with all optimizations enabled`() {
+
+        buildFile.writeText("""
+            plugins {
+                id 'se.eelde.ago'
+            }
+            
+            buildOptimization {
+                jvmMinMem '4GB'
+            }
+        """)
+
+        File(testProjectDir, "gradle.properties").writeText("""
+org.gradle.parallel=true
+org.gradle.daemon=true
+org.gradle.configureondemand=true
+org.gradle.caching=true
+
+org.gradle.jvmargs=-Xmx1g
+        """)
+
+        @Suppress("UnstableApiUsage")
+        val build = GradleRunner.create()
+                .withEnvironment(mapOf())
+                .withProjectDir(testProjectDir)
+                .withArguments("androidGradleOptimizations")
+                .withPluginClasspath()
+                .buildAndFail()
+
+        build.tasks[0].also { buildTask ->
+            assertThat(buildTask.outcome).isEqualTo(TaskOutcome.FAILED)
+        }
+    }
+
+    @Test
+    fun `test jvmstuff result with all optimizations enabled`() {
+
+        buildFile.writeText("""
+            plugins {
+                id 'se.eelde.ago'
+            }
+            
+            buildOptimization {
+                jvmMinMem '4GB'
+            }
+        """)
+
+        File(testProjectDir, "gradle.properties").writeText("""
+org.gradle.parallel=true
+org.gradle.daemon=true
+org.gradle.configureondemand=true
+org.gradle.caching=true
+
+org.gradle.jvmargs=-Xmx4g
+        """)
+
+        @Suppress("UnstableApiUsage")
+        val build = GradleRunner.create()
+                .withEnvironment(mapOf())
+                .withProjectDir(testProjectDir)
+                .withArguments("androidGradleOptimizations")
+                .withPluginClasspath()
+                .build()
+
+        build.tasks[0].also { buildTask ->
+            assertThat(buildTask.outcome).isEqualTo(TaskOutcome.SUCCESS)
         }
     }
 

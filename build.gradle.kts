@@ -1,17 +1,15 @@
 plugins {
-    id("com.github.ben-manes.versions") version "0.24.0"
+    id("com.github.ben-manes.versions") version "0.25.0"
     id("java")
     id("java-gradle-plugin")
     id("com.gradle.plugin-publish") version "0.10.1"
     id("org.jetbrains.kotlin.jvm") version "1.3.50"
     id("maven-publish")
     id("signing")
+    id("se.eelde.build-optimizations") version "0.1"
 }
 
 buildscript {
-    dependencies {
-    }
-
     repositories {
         jcenter()
     }
@@ -22,7 +20,6 @@ allprojects {
         jcenter()
     }
 }
-
 
 apply { from("ktlint.gradle") }
 
@@ -37,12 +34,18 @@ kotlin {
     }
 }
 
+tasks.withType<Test> {
+    @Suppress("UnstableApiUsage")
+    useJUnitPlatform()
+}
+
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation(kotlin("stdlib"))
     implementation(gradleApi())
-    testImplementation("junit:junit:4.12")
     testImplementation(gradleTestKit())
     testImplementation("com.google.truth:truth:1.0")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.2")
 }
 
 val sourcesJar by tasks.creating(Jar::class) {
@@ -93,7 +96,6 @@ publishing {
     publications {
         create<MavenPublication>("mavenJava") {
             from(components["java"])
-
 
             artifact(sourcesJar)
             artifact(javadocJar)

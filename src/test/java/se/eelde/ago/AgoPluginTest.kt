@@ -3,22 +3,21 @@ package se.eelde.ago
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.TemporaryFolder
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 import java.io.File
 
 internal class AgoPluginTest {
 
-    @get:Rule
-    val testProjectDir = TemporaryFolder()
+    @TempDir
+    lateinit var testProjectDir: File
 
     private lateinit var buildFile: File
 
-    @Before
+    @BeforeEach
     fun setup() {
-        buildFile = testProjectDir.newFile("build.gradle").also {
+        buildFile = File(testProjectDir, "build.gradle").also {
             it.writeText("""
             plugins {
                 id 'se.eelde.ago'
@@ -30,7 +29,7 @@ internal class AgoPluginTest {
     @Test
     fun `test successful result with all optimizations enabled`() {
 
-        testProjectDir.newFile("gradle.properties").writeText("""
+        File(testProjectDir, "gradle.properties").writeText("""
 org.gradle.parallel=true
 org.gradle.daemon=true
 org.gradle.configureondemand=true
@@ -40,7 +39,7 @@ org.gradle.caching=true
         @Suppress("UnstableApiUsage")
         val build = GradleRunner.create()
                 .withEnvironment(mapOf())
-                .withProjectDir(testProjectDir.root)
+                .withProjectDir(testProjectDir)
                 .withArguments("androidGradleOptimizations")
                 .withPluginClasspath()
                 .build()
@@ -53,7 +52,7 @@ org.gradle.caching=true
     @Test
     fun `test failing result with parallel buils disabled`() {
 
-        testProjectDir.newFile("gradle.properties").writeText("""
+        File(testProjectDir, "gradle.properties").writeText("""
 org.gradle.parallel=false
 org.gradle.daemon=true
 org.gradle.configureondemand=true
@@ -63,7 +62,7 @@ org.gradle.caching=true
         @Suppress("UnstableApiUsage")
         val build = GradleRunner.create()
                 .withEnvironment(mapOf())
-                .withProjectDir(testProjectDir.root)
+                .withProjectDir(testProjectDir)
                 .withArguments("androidGradleOptimizations")
                 .withPluginClasspath()
                 .buildAndFail()
@@ -76,7 +75,7 @@ org.gradle.caching=true
     @Test
     fun `test failing result with daemon disabled`() {
 
-        testProjectDir.newFile("gradle.properties").writeText("""
+        File(testProjectDir, "gradle.properties").writeText("""
 org.gradle.parallel=true
 org.gradle.daemon=false
 org.gradle.configureondemand=true
@@ -86,7 +85,7 @@ org.gradle.caching=true
         @Suppress("UnstableApiUsage")
         val build = GradleRunner.create()
                 .withEnvironment(mapOf())
-                .withProjectDir(testProjectDir.root)
+                .withProjectDir(testProjectDir)
                 .withArguments("androidGradleOptimizations")
                 .withPluginClasspath()
                 .build()
@@ -99,7 +98,7 @@ org.gradle.caching=true
     @Test
     fun `test failing result with caching disabled`() {
 
-        testProjectDir.newFile("gradle.properties").writeText("""
+        File(testProjectDir, "gradle.properties").writeText("""
 org.gradle.parallel=true
 org.gradle.daemon=true
 org.gradle.configureondemand=true
@@ -109,7 +108,7 @@ org.gradle.caching=false
         @Suppress("UnstableApiUsage")
         val build = GradleRunner.create()
                 .withEnvironment(mapOf())
-                .withProjectDir(testProjectDir.root)
+                .withProjectDir(testProjectDir)
                 .withArguments("androidGradleOptimizations")
                 .withPluginClasspath()
                 .buildAndFail()
@@ -122,7 +121,7 @@ org.gradle.caching=false
     @Test
     fun `test task not added on ci`() {
 
-        testProjectDir.newFile("gradle.properties").writeText("""
+        File(testProjectDir, "gradle.properties").writeText("""
 org.gradle.parallel=true
 org.gradle.daemon=true
 org.gradle.configureondemand=true
@@ -132,7 +131,7 @@ org.gradle.caching=true
         @Suppress("UnstableApiUsage")
         val build = GradleRunner.create()
                 .withEnvironment(mapOf("CI" to "true", "CIRCLECI" to "true"))
-                .withProjectDir(testProjectDir.root)
+                .withProjectDir(testProjectDir)
                 .withArguments("androidGradleOptimizations")
                 .withPluginClasspath()
                 .buildAndFail()

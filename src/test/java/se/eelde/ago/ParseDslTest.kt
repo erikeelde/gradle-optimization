@@ -5,22 +5,21 @@ import org.gradle.api.internal.project.DefaultProject
 import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import org.junit.rules.TemporaryFolder
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.io.TempDir
 import java.io.File
 
 internal class ParseDslTest {
 
-    @get:Rule
-    val testProjectDir = TemporaryFolder()
+    @TempDir
+    lateinit var testProjectDir: File
 
     private lateinit var buildFile: File
 
-    @Before
+    @BeforeEach
     fun setup() {
-        buildFile = testProjectDir.newFile("build.gradle")
+        buildFile = File(testProjectDir, "build.gradle")
     }
 
     @Test
@@ -34,7 +33,7 @@ internal class ParseDslTest {
             }
         """)
 
-        val project = ProjectBuilder.builder().withProjectDir(testProjectDir.root).build()
+        val project = ProjectBuilder.builder().withProjectDir(testProjectDir).build()
         (project as DefaultProject).evaluate()
 
         val agoPlugin = project.plugins.getPlugin(AgoPlugin::class.java) as AgoPlugin
@@ -51,7 +50,7 @@ internal class ParseDslTest {
             }
         """)
 
-        testProjectDir.newFile("gradle.properties").writeText("""
+        File(testProjectDir, "gradle.properties").writeText("""
 org.gradle.parallel=true
 org.gradle.daemon=true
 org.gradle.configureondemand=true
@@ -61,7 +60,7 @@ org.gradle.caching=true
         @Suppress("UnstableApiUsage")
         val build = GradleRunner.create()
                 .withEnvironment(mapOf())
-                .withProjectDir(testProjectDir.root)
+                .withProjectDir(testProjectDir)
                 .withArguments("androidGradleOptimizations")
                 .withPluginClasspath()
                 .build()

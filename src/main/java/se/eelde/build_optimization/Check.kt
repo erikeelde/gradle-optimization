@@ -1,4 +1,4 @@
-package se.eelde.ago
+package se.eelde.build_optimization
 
 import java.nio.charset.Charset
 
@@ -33,7 +33,7 @@ sealed class Check(val aDefault: CheckSeverity, val link: String, val hints: Lis
                     "Run with --configure-on-demand, --no-configure-on-demand on the command-line"),
             praise = "Using configure on demand :+1")
 
-    class Memory(val size: se.eelde.ago.Memory) : Check(aDefault = CheckSeverity.ENABLED_ENFORCED,
+    class Memory(val size: se.eelde.build_optimization.Memory) : Check(aDefault = CheckSeverity.ENABLED_ENFORCED,
             link = "https://docs.gradle.org/current/userguide/build_environment.html#sec:configuring_jvm_memory",
             hints = listOf("Expecting more jvm memory to be defined",
                     "gradle.properties >> org.gradle.jvmargs=-Xmx2g"),

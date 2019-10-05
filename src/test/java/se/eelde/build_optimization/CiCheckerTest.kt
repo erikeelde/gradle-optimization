@@ -1,7 +1,7 @@
-package se.eelde.ago
+package se.eelde.build_optimization
 
-import org.junit.Assert.assertTrue
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Test
 
 internal class CiCheckerTest {
 

@@ -1,4 +1,4 @@
-package se.eelde.ago
+package se.eelde.build_optimization
 
 import org.gradle.api.internal.project.DefaultProject
 import org.gradle.api.logging.LogLevel
@@ -6,13 +6,13 @@ import org.gradle.api.logging.Logger
 import org.gradle.internal.logging.text.StyledTextOutput
 import org.gradle.internal.logging.text.StyledTextOutputFactory
 
-class AgoOutputter(var logger: Logger, defaultProject: DefaultProject) {
+class BuildOptimizationOutputter(var logger: Logger, defaultProject: DefaultProject) {
 
     private val styledTextOutput: StyledTextOutput
 
     init {
         val styledTextOutputFactory = defaultProject.services.get(StyledTextOutputFactory::class.java)
-        styledTextOutput = styledTextOutputFactory.create("ago")
+        styledTextOutput = styledTextOutputFactory.create("build-optimization")
     }
 
     fun greatInfo() {

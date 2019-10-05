@@ -1,68 +1,68 @@
-package se.eelde.ago
+package se.eelde.build_optimization
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.internal.project.DefaultProject
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.TaskAction
-import se.eelde.ago.evaluators.DaemonExecutionEvaluator
-import se.eelde.ago.evaluators.MemoryEvaluator
-import se.eelde.ago.evaluators.StartParameterEvaluator
+import se.eelde.build_optimization.evaluators.DaemonExecutionEvaluator
+import se.eelde.build_optimization.evaluators.MemoryEvaluator
+import se.eelde.build_optimization.evaluators.StartParameterEvaluator
 
-open class AgoTask : DefaultTask() {
+open class BuildOptimizationTask : DefaultTask() {
 
-    internal lateinit var agoOutputter: AgoOutputter
-    internal lateinit var agoPluginExtension: AgoPluginExtension
+    internal lateinit var buildOptimizationOutputter: BuildOptimizationOutputter
+    internal lateinit var buildOptimizationPluginExtension: BuildOptimizationPluginExtension
 
     @TaskAction
     fun moduleTask() {
 
-        agoOutputter.greatInfo()
+        buildOptimizationOutputter.greatInfo()
 
         var optimizationsMissing = false
 
         val daemonCheck = Check.Daemon()
         val daemonExecutionEvaluator = DaemonExecutionEvaluator(project as DefaultProject)
         if (daemonExecutionEvaluator.isSingleUse) {
-            agoOutputter.printCheck(daemonCheck)
+            buildOptimizationOutputter.printCheck(daemonCheck)
 
             if (daemonCheck.aDefault == CheckSeverity.ENABLED_ENFORCED) {
                 optimizationsMissing = true
             }
         } else {
-            agoOutputter.printPraise(daemonCheck)
+            buildOptimizationOutputter.printPraise(daemonCheck)
         }
 
         val startParameterEvaluator = StartParameterEvaluator(project as DefaultProject)
 
         val parallelCheck = Check.Parallel()
         if (!startParameterEvaluator.isParalellExecutionEnabled) {
-            agoOutputter.printCheck(parallelCheck)
+            buildOptimizationOutputter.printCheck(parallelCheck)
             if (parallelCheck.aDefault == CheckSeverity.ENABLED_ENFORCED) {
                 optimizationsMissing = true
             }
         } else {
-            agoOutputter.printPraise(parallelCheck)
+            buildOptimizationOutputter.printPraise(parallelCheck)
         }
 
         val cacheCheck = Check.Cache()
         if (!startParameterEvaluator.isCachingEnabled) {
-            agoOutputter.printCheck(cacheCheck)
+            buildOptimizationOutputter.printCheck(cacheCheck)
             if (cacheCheck.aDefault == CheckSeverity.ENABLED_ENFORCED) {
                 optimizationsMissing = true
             }
         } else {
-            agoOutputter.printPraise(cacheCheck)
+            buildOptimizationOutputter.printPraise(cacheCheck)
         }
 
         val configureOnDemandCheck = Check.ConfigureOnDemand()
         if (!startParameterEvaluator.isConfigureOnDemand) {
-            agoOutputter.printCheck(configureOnDemandCheck)
+            buildOptimizationOutputter.printCheck(configureOnDemandCheck)
             if (configureOnDemandCheck.aDefault == CheckSeverity.ENABLED_ENFORCED) {
                 optimizationsMissing = true
             }
         } else {
-            agoOutputter.printPraise(configureOnDemandCheck)
+            buildOptimizationOutputter.printPraise(configureOnDemandCheck)
         }
 
         val memoryEvaluator = MemoryEvaluator(project as DefaultProject)
@@ -75,37 +75,38 @@ open class AgoTask : DefaultTask() {
             val parseMaxJmvMem = jvmArgsParser.parseMaxJmvMem(jvmArgs = jvmArgs)
             val parseFileEncoding = jvmArgsParser.parseFileEncoding(jvmArgs = jvmArgs)
 
-            agoOutputter.logger.log(LogLevel.DEBUG, "Defined Jvm Memory according to memoryEvaluator: $jvmMemory")
-            agoOutputter.logger.log(LogLevel.DEBUG, "jvmArgsParser mem: $parseMaxJmvMem")
-            agoOutputter.logger.log(LogLevel.DEBUG, "jvmArgsParser enc: $parseFileEncoding")
+            buildOptimizationOutputter.logger.log(LogLevel.DEBUG, "Defined Jvm Memory according to memoryEvaluator: $jvmMemory")
+            buildOptimizationOutputter.logger.log(LogLevel.DEBUG, "jvmArgsParser mem: $parseMaxJmvMem")
+            buildOptimizationOutputter.logger.log(LogLevel.DEBUG, "jvmArgsParser enc: $parseFileEncoding")
 
-            val expectedJvmMemory = Check.Memory(Memory.Gigabyte(2))
-            if (parseMaxJmvMem.asBytes() < expectedJvmMemory.size.asBytes()) {
-                agoOutputter.printCheck(expectedJvmMemory)
+            val expectedJvmMemory = Check.Memory(buildOptimizationPluginExtension.getMaxJvmMem())
+
+            if (parseMaxJmvMem.asBytes() > expectedJvmMemory.size.asBytes()) {
+                buildOptimizationOutputter.printCheck(expectedJvmMemory)
                 if (expectedJvmMemory.aDefault == CheckSeverity.ENABLED_ENFORCED) {
                     optimizationsMissing = true
                 }
             } else {
-                agoOutputter.printPraise(expectedJvmMemory)
+                buildOptimizationOutputter.printPraise(expectedJvmMemory)
             }
 
             val utF8FileEncodingCheck = Check.UTF8FileEncoding(Charsets.UTF_8)
             if (parseFileEncoding != utF8FileEncodingCheck.charset) {
-                agoOutputter.printCheck(utF8FileEncodingCheck)
+                buildOptimizationOutputter.printCheck(utF8FileEncodingCheck)
                 if (utF8FileEncodingCheck.aDefault == CheckSeverity.ENABLED_ENFORCED) {
                     optimizationsMissing = true
                 }
             } else {
-                agoOutputter.printPraise(utF8FileEncodingCheck)
+                buildOptimizationOutputter.printPraise(utF8FileEncodingCheck)
             }
         }
 
         val versionsUpdatePluginCheck = Check.VersionsPlugin()
         @Suppress("SENSELESS_COMPARISON")
         if (!project.plugins.hasPlugin("com.github.ben-manes.versions")) {
-            agoOutputter.printCheck(versionsUpdatePluginCheck)
+            buildOptimizationOutputter.printCheck(versionsUpdatePluginCheck)
         } else {
-            agoOutputter.printPraise(versionsUpdatePluginCheck)
+            buildOptimizationOutputter.printPraise(versionsUpdatePluginCheck)
         }
 
         if (optimizationsMissing) {

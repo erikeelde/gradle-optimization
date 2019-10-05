@@ -1,4 +1,4 @@
-package se.eelde.ago.evaluators
+package se.eelde.build_optimization.evaluators
 
 import org.gradle.api.internal.project.DefaultProject
 import org.gradle.launcher.daemon.context.DaemonContext

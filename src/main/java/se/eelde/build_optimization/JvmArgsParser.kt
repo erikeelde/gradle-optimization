@@ -1,4 +1,4 @@
-package se.eelde.ago
+package se.eelde.build_optimization
 
 import java.nio.charset.Charset
 

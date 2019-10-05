@@ -64,12 +64,12 @@ gradlePlugin {
         create("gradleOptimizationsPlugin") {
             id = "se.eelde.build-optimizations"
             group = "se.eelde"
-            implementationClass = "se.eelde.ago.AgoPlugin"
+            implementationClass = "se.eelde.build_optimization.BuildOptimizationPlugin"
         }
     }
 }
 
-version = "0.1"
+version = "0.1.1"
 
 pluginBundle {
     website = "http://www.eelde.se/"

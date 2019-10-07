@@ -3,6 +3,7 @@ package se.eelde.build_optimization
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
@@ -20,7 +21,7 @@ internal class BuildOptimizationPluginTest {
         buildFile = File(testProjectDir, "build.gradle").also {
             it.writeText("""
             plugins {
-                id 'se.eelde.ago'
+                id 'se.eelde.build_optimization'
             }
         """)
         }
@@ -31,7 +32,7 @@ internal class BuildOptimizationPluginTest {
 
         buildFile.writeText("""
             plugins {
-                id 'se.eelde.ago'
+                id 'se.eelde.build_optimization'
             }
             
             buildOptimization {
@@ -52,9 +53,11 @@ org.gradle.jvmargs=-Xmx1g
         val build = GradleRunner.create()
                 .withEnvironment(mapOf())
                 .withProjectDir(testProjectDir)
-                .withArguments("androidGradleOptimizations")
+                .withArguments("checkBuildOptimizations")
                 .withPluginClasspath()
                 .buildAndFail()
+
+        assertTrue(build.output.contains("Expecting more jvm memory to be defined "), build.output)
 
         build.tasks[0].also { buildTask ->
             assertThat(buildTask.outcome).isEqualTo(TaskOutcome.FAILED)
@@ -66,7 +69,7 @@ org.gradle.jvmargs=-Xmx1g
 
         buildFile.writeText("""
             plugins {
-                id 'se.eelde.ago'
+                id 'se.eelde.build_optimization'
             }
             
             buildOptimization {
@@ -87,7 +90,7 @@ org.gradle.jvmargs=-Xmx4g
         val build = GradleRunner.create()
                 .withEnvironment(mapOf())
                 .withProjectDir(testProjectDir)
-                .withArguments("androidGradleOptimizations")
+                .withArguments("checkBuildOptimizations")
                 .withPluginClasspath()
                 .build()
 
@@ -110,7 +113,7 @@ org.gradle.caching=true
         val build = GradleRunner.create()
                 .withEnvironment(mapOf())
                 .withProjectDir(testProjectDir)
-                .withArguments("androidGradleOptimizations")
+                .withArguments("checkBuildOptimizations")
                 .withPluginClasspath()
                 .build()
 
@@ -133,9 +136,11 @@ org.gradle.caching=true
         val build = GradleRunner.create()
                 .withEnvironment(mapOf())
                 .withProjectDir(testProjectDir)
-                .withArguments("androidGradleOptimizations")
+                .withArguments("checkBuildOptimizations")
                 .withPluginClasspath()
                 .buildAndFail()
+
+        assertTrue(build.output.contains("Run with --parallel on the command-line"), build.output)
 
         build.tasks[0].also { buildTask ->
             assertThat(buildTask.outcome).isEqualTo(TaskOutcome.FAILED)
@@ -156,7 +161,7 @@ org.gradle.caching=true
         val build = GradleRunner.create()
                 .withEnvironment(mapOf())
                 .withProjectDir(testProjectDir)
-                .withArguments("androidGradleOptimizations")
+                .withArguments("checkBuildOptimizations")
                 .withPluginClasspath()
                 .build()
 
@@ -179,9 +184,11 @@ org.gradle.caching=false
         val build = GradleRunner.create()
                 .withEnvironment(mapOf())
                 .withProjectDir(testProjectDir)
-                .withArguments("androidGradleOptimizations")
+                .withArguments("checkBuildOptimizations")
                 .withPluginClasspath()
                 .buildAndFail()
+
+        assertTrue(build.output.contains("gradle.properties >> org.gradle.caching=true"), build.output)
 
         build.tasks[0].also { buildTask ->
             assertThat(buildTask.outcome).isEqualTo(TaskOutcome.FAILED)
@@ -202,9 +209,11 @@ org.gradle.caching=true
         val build = GradleRunner.create()
                 .withEnvironment(mapOf("CI" to "true", "CIRCLECI" to "true"))
                 .withProjectDir(testProjectDir)
-                .withArguments("androidGradleOptimizations")
+                .withArguments("checkBuildOptimizations")
                 .withPluginClasspath()
                 .buildAndFail()
+
+        assertTrue(build.output.contains("Build running on CI - ignoring gradle optimization-checks."), build.output)
 
         assertThat(build.tasks.size).isEqualTo(0)
     }

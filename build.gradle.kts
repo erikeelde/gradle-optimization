@@ -6,7 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.3.50"
     id("maven-publish")
     id("signing")
-    id("se.eelde.build-optimizations") version "0.1"
+    id("se.eelde.build-optimizations") version "0.1.1"
 }
 
 buildscript {

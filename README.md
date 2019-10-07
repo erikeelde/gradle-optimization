@@ -22,9 +22,9 @@ plugins {
 
 ### Specifics: 
 
-Dsl is [here](src/test/java/se/eelde/ago/ParseDslTest.kt)
+Dsl is [here](src/test/java/se/eelde/build_optimization/ParseDslTest.kt)
 
-Checks are [here](src/main/java/se/eelde/ago/Check.kt)
+Checks are [here](src/main/java/se/eelde/build_optimization/Check.kt)
 
 * Daemon execution
 * Paralell Execution

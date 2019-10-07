@@ -10,10 +10,15 @@ plugins {
 }
 
 buildscript {
+    //    dependencies {
+//        classpath("se.eelde.build-optimizations:se.eelde.build-optimizations.gradle.plugin:0.1.1")
+//    }
     repositories {
         jcenter()
+        mavenLocal()
     }
 }
+
 
 allprojects {
     repositories {
@@ -22,6 +27,7 @@ allprojects {
 }
 
 apply { from("ktlint.gradle") }
+//apply(plugin= "se.eelde.build-optimizations")
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -46,16 +52,6 @@ dependencies {
     testImplementation("com.google.truth:truth:1.0")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.2")
-}
-
-val sourcesJar by tasks.creating(Jar::class) {
-    archiveClassifier.set("sources")
-    from(sourceSets.main.get().allSource)
-}
-
-val javadocJar by tasks.creating(Jar::class) {
-    from(tasks.javadoc)
-    archiveClassifier.set("javadoc")
 }
 
 // Use java-gradle-plugin to generate plugin descriptors and specify plugin ids
@@ -88,17 +84,6 @@ pluginBundle {
 
                 A good way to get new optimizations from gradle to be adopted across users of your repository / your organization.
             """.trimMargin()
-        }
-    }
-}
-
-publishing {
-    publications {
-        create<MavenPublication>("mavenJava") {
-            from(components["java"])
-
-            artifact(sourcesJar)
-            artifact(javadocJar)
         }
     }
 }

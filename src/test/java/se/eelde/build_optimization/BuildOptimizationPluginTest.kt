@@ -28,7 +28,7 @@ internal class BuildOptimizationPluginTest {
     }
 
     @Test
-    fun `test jvmstuf2f result with all optimizations enabled`() {
+    fun `test failed result with xmx too low`() {
 
         buildFile.writeText("""
             plugins {
@@ -36,7 +36,7 @@ internal class BuildOptimizationPluginTest {
             }
             
             buildOptimization {
-                jvmMinMem '4GB'
+                jvmXmx '4GB'
             }
         """)
 
@@ -57,7 +57,7 @@ org.gradle.jvmargs=-Xmx1g
                 .withPluginClasspath()
                 .buildAndFail()
 
-        assertTrue(build.output.contains("Expecting more jvm memory to be defined "), build.output)
+        assertTrue(build.output.contains("Expecting more jvm xmx memory to be defined"), build.output)
 
         build.tasks[0].also { buildTask ->
             assertThat(buildTask.outcome).isEqualTo(TaskOutcome.FAILED)
@@ -65,7 +65,7 @@ org.gradle.jvmargs=-Xmx1g
     }
 
     @Test
-    fun `test jvmstuff result with all optimizations enabled`() {
+    fun `test failed result with xms too low`() {
 
         buildFile.writeText("""
             plugins {
@@ -73,7 +73,7 @@ org.gradle.jvmargs=-Xmx1g
             }
             
             buildOptimization {
-                jvmMinMem '4GB'
+                jvmXms '500MB'
             }
         """)
 
@@ -83,7 +83,7 @@ org.gradle.daemon=true
 org.gradle.configureondemand=true
 org.gradle.caching=true
 
-org.gradle.jvmargs=-Xmx4g
+org.gradle.jvmargs=-Xms300m
         """)
 
         @Suppress("UnstableApiUsage")
@@ -92,21 +92,35 @@ org.gradle.jvmargs=-Xmx4g
                 .withProjectDir(testProjectDir)
                 .withArguments("checkBuildOptimizations")
                 .withPluginClasspath()
-                .build()
+                .buildAndFail()
+
+        assertTrue(build.output.contains("Expecting more jvm xms memory to be defined"), build.output)
 
         build.tasks[0].also { buildTask ->
-            assertThat(buildTask.outcome).isEqualTo(TaskOutcome.SUCCESS)
+            assertThat(buildTask.outcome).isEqualTo(TaskOutcome.FAILED)
         }
     }
 
     @Test
     fun `test successful result with all optimizations enabled`() {
+        buildFile.writeText("""
+            plugins {
+                id 'se.eelde.build_optimization'
+            }
+            
+            buildOptimization {
+                jvmXms '500MB'
+                jvmXmx '4GB'
+            }
+        """)
 
         File(testProjectDir, "gradle.properties").writeText("""
 org.gradle.parallel=true
 org.gradle.daemon=true
 org.gradle.configureondemand=true
 org.gradle.caching=true
+
+org.gradle.jvmargs=-Xmx5g -Xms600m
         """)
 
         @Suppress("UnstableApiUsage")

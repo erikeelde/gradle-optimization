@@ -38,6 +38,5 @@ class BuildOptimizationPlugin : Plugin<Project> {
             task.buildOptimizationOutputter = buildOptimizationOutputter
             task.buildOptimizationPluginExtension = buildOptimizationPluginExtension as BuildOptimizationPluginExtension
         }
-
     }
 }

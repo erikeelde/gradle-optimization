@@ -29,7 +29,8 @@ internal class ParseDslTest {
             apply plugin: "se.eelde.build_optimization"
 
             buildOptimization {
-                jvmMinMem '4GB'
+                jvmXmx '4GB'
+                jvmXms '500MB'
             }
         """)
 
@@ -39,7 +40,8 @@ internal class ParseDslTest {
         val buildOptimizationPlugin = project.plugins.getPlugin(BuildOptimizationPlugin::class.java) as BuildOptimizationPlugin
         val buildOptimizationPluginExtension = buildOptimizationPlugin.buildOptimizationPluginExtension!!
 
-        assertThat(buildOptimizationPluginExtension.jvmMinMem).isEqualTo("4GB")
+        assertThat(buildOptimizationPluginExtension.jvmXmx).isEqualTo("4GB")
+        assertThat(buildOptimizationPluginExtension.jvmXms).isEqualTo("500MB")
     }
 
     @Test

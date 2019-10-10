@@ -7,27 +7,36 @@ Check for output in the gradle build logs for helpful tips.
 
 Plugin published [here](https://plugins.gradle.org/plugin/se.eelde.build-optimizations)
 
-##### Deploy:
-```
+##### Test it (locally):
+```shell script
 ./gradlew :publishMavenLocal
 ```
 
-##### Test it:
+```kotlin
+buildscript {
+    dependencies {
+        classpath("se.eelde.build-optimizations:se.eelde.build-optimizations.gradle.plugin:0.1.1")
+    }
+}
+
+apply(plugin= "se.eelde.build-optimizations")
 ```
+
+##### Test it (production):
+```kotlin
 plugins {
-  id("se.eelde.build-optimizations") version "0.1"
+  id("se.eelde.build-optimizations") version "0.1.1"
 }
 ```
 
-
 ### Specifics: 
 
-Dsl is [here](src/test/java/se/eelde/ago/ParseDslTest.kt)
+Dsl is [here](src/test/java/se/eelde/build_optimization/ParseDslTest.kt)
 
-Checks are [here](src/main/java/se/eelde/ago/Check.kt)
+Checks are [here](src/main/java/se/eelde/build_optimization/Check.kt)
 
 * Daemon execution
-* Paralell Execution
+* Parallel Execution
 * Gradle caches
 * Configure on demand  
 * JvmMemory 

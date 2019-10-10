@@ -21,7 +21,7 @@ class BuildOptimizationPlugin : Plugin<Project> {
             return
         }
 
-        val buildOptimizationTask = project.tasks.register("androidGradleOptimizations", BuildOptimizationTask::class.java) { task ->
+        val buildOptimizationTask = project.tasks.register("checkBuildOptimizations", BuildOptimizationTask::class.java) { task ->
             task.buildOptimizationOutputter = buildOptimizationOutputter
             task.buildOptimizationPluginExtension = buildOptimizationPluginExtension as BuildOptimizationPluginExtension
         }
@@ -32,6 +32,11 @@ class BuildOptimizationPlugin : Plugin<Project> {
                     task.dependsOn(buildOptimizationTask)
                 }
             }
+        }
+
+        project.tasks.register("applyBuildOptimizations", BuildOptimizationTask::class.java) { task ->
+            task.buildOptimizationOutputter = buildOptimizationOutputter
+            task.buildOptimizationPluginExtension = buildOptimizationPluginExtension as BuildOptimizationPluginExtension
         }
     }
 }

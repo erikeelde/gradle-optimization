@@ -33,11 +33,17 @@ sealed class Check(val aDefault: CheckSeverity, val link: String, val hints: Lis
                     "Run with --configure-on-demand, --no-configure-on-demand on the command-line"),
             praise = "Using configure on demand :+1")
 
-    class Memory(val size: se.eelde.build_optimization.Memory) : Check(aDefault = CheckSeverity.ENABLED_ENFORCED,
+    class JvmXmx(val size: Memory) : Check(aDefault = CheckSeverity.ENABLED_ENFORCED,
             link = "https://docs.gradle.org/current/userguide/build_environment.html#sec:configuring_jvm_memory",
-            hints = listOf("Expecting more jvm memory to be defined",
+            hints = listOf("Expecting more jvm xmx memory to be defined",
                     "gradle.properties >> org.gradle.jvmargs=-Xmx2g"),
-            praise = "You have ample jvm memory assigned :+1")
+            praise = "You have ample jvm xmx memory assigned :+1")
+
+    class JvmXms(val size: Memory) : Check(aDefault = CheckSeverity.ENABLED_ENFORCED,
+            link = "https://docs.gradle.org/current/userguide/build_environment.html#sec:configuring_jvm_memory",
+            hints = listOf("Expecting more jvm xms memory to be defined",
+                    "gradle.properties >> org.gradle.jvmargs=-Xmx500m"),
+            praise = "You have ample jvm xms memory assigned :+1")
 
     class UTF8FileEncoding(val charset: Charset) : Check(aDefault = CheckSeverity.ENABLED_RECOMMENDED,
             link = "https://github.com/gradle/gradle/issues/2270",

@@ -3,7 +3,6 @@ package se.eelde.build_optimization
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.internal.project.DefaultProject
-import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.TaskAction
 import se.eelde.build_optimization.evaluators.DaemonExecutionEvaluator
 import se.eelde.build_optimization.evaluators.MemoryEvaluator
@@ -17,7 +16,8 @@ open class BuildOptimizationTask : DefaultTask() {
     @TaskAction
     fun moduleTask() {
 
-        buildOptimizationOutputter.greatInfo()
+        // output this if the task is explicity invoked?
+        // buildOptimizationOutputter.greatInfo()
 
         var optimizationsMissing = false
 
@@ -30,7 +30,8 @@ open class BuildOptimizationTask : DefaultTask() {
                 optimizationsMissing = true
             }
         } else {
-            buildOptimizationOutputter.printPraise(daemonCheck)
+            // output this if the task is explicity invoked?
+            // buildOptimizationOutputter.printPraise(daemonCheck)
         }
 
         val startParameterEvaluator = StartParameterEvaluator(project as DefaultProject)
@@ -42,7 +43,8 @@ open class BuildOptimizationTask : DefaultTask() {
                 optimizationsMissing = true
             }
         } else {
-            buildOptimizationOutputter.printPraise(parallelCheck)
+            // output this if the task is explicity invoked?
+            // buildOptimizationOutputter.printPraise(parallelCheck)
         }
 
         val cacheCheck = Check.Cache()
@@ -52,7 +54,8 @@ open class BuildOptimizationTask : DefaultTask() {
                 optimizationsMissing = true
             }
         } else {
-            buildOptimizationOutputter.printPraise(cacheCheck)
+            // output this if the task is explicity invoked?
+            // buildOptimizationOutputter.printPraise(cacheCheck)
         }
 
         val configureOnDemandCheck = Check.ConfigureOnDemand()
@@ -62,34 +65,44 @@ open class BuildOptimizationTask : DefaultTask() {
                 optimizationsMissing = true
             }
         } else {
-            buildOptimizationOutputter.printPraise(configureOnDemandCheck)
+            // output this if the task is explicity invoked?
+            // buildOptimizationOutputter.printPraise(configureOnDemandCheck)
         }
 
         val memoryEvaluator = MemoryEvaluator(project as DefaultProject)
-
         val jvmMemory = memoryEvaluator.getMaxMemory / 1000000
 
         if (project.extensions.extraProperties.has("org.gradle.jvmargs")) {
             val jvmArgs = project.extensions.extraProperties["org.gradle.jvmargs"]?.toString() ?: ""
             val jvmArgsParser = JvmArgsParser()
-            val parseMaxJmvMem = jvmArgsParser.parseMaxJmvMem(jvmArgs = jvmArgs)
-            val parseFileEncoding = jvmArgsParser.parseFileEncoding(jvmArgs = jvmArgs)
 
-            buildOptimizationOutputter.logger.log(LogLevel.DEBUG, "Defined Jvm Memory according to memoryEvaluator: $jvmMemory")
-            buildOptimizationOutputter.logger.log(LogLevel.DEBUG, "jvmArgsParser mem: $parseMaxJmvMem")
-            buildOptimizationOutputter.logger.log(LogLevel.DEBUG, "jvmArgsParser enc: $parseFileEncoding")
+            val parseJmvXmxMem = jvmArgsParser.parseJvmXmxMemory(jvmArgs = jvmArgs)
+            val dslProvidedJvmXmx = Check.JvmXmx(buildOptimizationPluginExtension.getJvmXmxMemory())
 
-            val expectedJvmMemory = Check.Memory(buildOptimizationPluginExtension.getMaxJvmMem())
-
-            if (parseMaxJmvMem.asBytes() > expectedJvmMemory.size.asBytes()) {
-                buildOptimizationOutputter.printCheck(expectedJvmMemory)
-                if (expectedJvmMemory.aDefault == CheckSeverity.ENABLED_ENFORCED) {
+            if (parseJmvXmxMem.asBytes() < dslProvidedJvmXmx.size.asBytes()) {
+                buildOptimizationOutputter.printCheck(dslProvidedJvmXmx)
+                if (dslProvidedJvmXmx.aDefault == CheckSeverity.ENABLED_ENFORCED) {
                     optimizationsMissing = true
                 }
             } else {
-                buildOptimizationOutputter.printPraise(expectedJvmMemory)
+                // output this if the task is explicity invoked?
+                // buildOptimizationOutputter.printPraise(dslProvidedJvmXmx)
             }
 
+            val parseJmvXmsMem = jvmArgsParser.parseJvmXmsMemory(jvmArgs = jvmArgs)
+            val dslProvidedJvmXms = Check.JvmXms(buildOptimizationPluginExtension.getJvmXmsMemory())
+
+            if (parseJmvXmsMem.asBytes() < dslProvidedJvmXms.size.asBytes()) {
+                buildOptimizationOutputter.printCheck(dslProvidedJvmXms)
+                if (dslProvidedJvmXms.aDefault == CheckSeverity.ENABLED_ENFORCED) {
+                    optimizationsMissing = true
+                }
+            } else {
+                // output this if the task is explicity invoked?
+                // buildOptimizationOutputter.printPraise(dslProvidedJvmXms)
+            }
+
+            val parseFileEncoding = jvmArgsParser.parseFileEncoding(jvmArgs = jvmArgs)
             val utF8FileEncodingCheck = Check.UTF8FileEncoding(Charsets.UTF_8)
             if (parseFileEncoding != utF8FileEncodingCheck.charset) {
                 buildOptimizationOutputter.printCheck(utF8FileEncodingCheck)
@@ -97,7 +110,8 @@ open class BuildOptimizationTask : DefaultTask() {
                     optimizationsMissing = true
                 }
             } else {
-                buildOptimizationOutputter.printPraise(utF8FileEncodingCheck)
+                // output this if the task is explicity invoked?
+                // buildOptimizationOutputter.printPraise(utF8FileEncodingCheck)
             }
         }
 
@@ -105,8 +119,6 @@ open class BuildOptimizationTask : DefaultTask() {
         @Suppress("SENSELESS_COMPARISON")
         if (!project.plugins.hasPlugin("com.github.ben-manes.versions")) {
             buildOptimizationOutputter.printCheck(versionsUpdatePluginCheck)
-        } else {
-            buildOptimizationOutputter.printPraise(versionsUpdatePluginCheck)
         }
 
         if (optimizationsMissing) {

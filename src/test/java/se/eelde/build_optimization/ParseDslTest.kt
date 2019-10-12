@@ -26,10 +26,11 @@ internal class ParseDslTest {
     fun `verify that dsl can be properly parsed`() {
 
         buildFile.writeText("""
-            apply plugin: "se.eelde.ago"
+            apply plugin: "se.eelde.build_optimization"
 
             buildOptimization {
-                jvmMinMem '4GB'
+                jvmXmx '4GB'
+                jvmXms '500MB'
             }
         """)
 
@@ -39,14 +40,15 @@ internal class ParseDslTest {
         val buildOptimizationPlugin = project.plugins.getPlugin(BuildOptimizationPlugin::class.java) as BuildOptimizationPlugin
         val buildOptimizationPluginExtension = buildOptimizationPlugin.buildOptimizationPluginExtension!!
 
-        assertThat(buildOptimizationPluginExtension.jvmMinMem).isEqualTo("4GB")
+        assertThat(buildOptimizationPluginExtension.jvmXmx).isEqualTo("4GB")
+        assertThat(buildOptimizationPluginExtension.jvmXms).isEqualTo("500MB")
     }
 
     @Test
     fun `test successful result with all optimizations enabled`() {
         buildFile.writeText("""
             plugins {
-                id 'se.eelde.ago'
+                id 'se.eelde.build_optimization'
             }
         """)
 
@@ -61,7 +63,7 @@ org.gradle.caching=true
         val build = GradleRunner.create()
                 .withEnvironment(mapOf())
                 .withProjectDir(testProjectDir)
-                .withArguments("androidGradleOptimizations")
+                .withArguments("checkBuildOptimizations")
                 .withPluginClasspath()
                 .build()
 

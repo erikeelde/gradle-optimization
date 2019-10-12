@@ -11,26 +11,30 @@ sealed class Check(val aDefault: CheckSeverity, val link: String, val hints: Lis
 
     class Parallel : Check(aDefault = CheckSeverity.ENABLED_ENFORCED,
             link = "https://guides.gradle.org/performance/",
-            hints = listOf("If possible, enable org.gradle.parallel",
+            hints = listOf("Builds are not being paralleled",
+                    "To enable: add 'org.gradle.parallel=true' to your gradle.properties",
                     "Run with --parallel on the command-line"),
             praise = "Using parallel :+1")
 
     class Daemon : Check(aDefault = CheckSeverity.ENABLED_ENFORCED,
             link = "https://docs.gradle.org/current/userguide/gradle_daemon.html",
-            hints = listOf("Don't disable the daemon: org.gradle.daemon=false",
-                    "Run with --daemon and --no-daemon on the command-line"),
+            hints = listOf("Builds are not run using the gradle daemon",
+                    "To enable: add 'org.gradle.daemon=true' to your gradle.properties",
+                    "Run with --daemon on the command-line"),
             praise = "Using daemon :+1")
 
     class Cache : Check(aDefault = CheckSeverity.ENABLED_ENFORCED,
             link = "https://docs.gradle.org/current/userguide/build_cache.html",
-            hints = listOf("gradle.properties >> org.gradle.caching=true",
-                    "Run with --build-cache or --no-build-cache on the command-line"),
+            hints = listOf("Builds are not making use of the gradle cache",
+                    "To enable: add 'org.gradle.caching=true' to your gradle.properties",
+                    "Run with --build-cache on the command-line"),
             praise = "Using cache :+1")
 
     class ConfigureOnDemand : Check(aDefault = CheckSeverity.ENABLED_RECOMMENDED,
             link = "https://docs.gradle.org/current/userguide/multi_project_builds.html#sec:configuration_on_demand",
-            hints = listOf("gradle.properties >> org.gradle.configureondemand=true",
-                    "Run with --configure-on-demand, --no-configure-on-demand on the command-line"),
+            hints = listOf("Builds are not using on demand configuration",
+                    "To enable: add 'org.gradle.configureondemand=true' to your gradle.properties",
+                    "Run with --configure-on-demand on the command-line"),
             praise = "Using configure on demand :+1")
 
     class JvmXmx(val size: Memory) : Check(aDefault = CheckSeverity.ENABLED_ENFORCED,

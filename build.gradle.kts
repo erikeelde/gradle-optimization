@@ -1,5 +1,5 @@
 plugins {
-    id("com.github.ben-manes.versions") version "0.25.0"
+    id("com.github.ben-manes.versions") version "0.26.0"
     id("java")
     id("java-gradle-plugin")
     id("com.gradle.plugin-publish") version "0.10.1"
@@ -65,7 +65,7 @@ gradlePlugin {
     }
 }
 
-version = "0.1.1"
+version = "0.1.2"
 
 pluginBundle {
     website = "http://www.eelde.se/"

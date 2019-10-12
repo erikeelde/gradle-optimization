@@ -154,7 +154,7 @@ org.gradle.caching=true
                 .withPluginClasspath()
                 .buildAndFail()
 
-        assertTrue(build.output.contains("Run with --parallel on the command-line"), build.output)
+        assertTrue(build.output.contains("Builds are not being paralleled"), build.output)
 
         build.tasks[0].also { buildTask ->
             assertThat(buildTask.outcome).isEqualTo(TaskOutcome.FAILED)
@@ -202,7 +202,7 @@ org.gradle.caching=false
                 .withPluginClasspath()
                 .buildAndFail()
 
-        assertTrue(build.output.contains("gradle.properties >> org.gradle.caching=true"), build.output)
+        assertTrue(build.output.contains("Builds are not making use of the gradle cache"), build.output)
 
         build.tasks[0].also { buildTask ->
             assertThat(buildTask.outcome).isEqualTo(TaskOutcome.FAILED)

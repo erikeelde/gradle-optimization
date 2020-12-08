@@ -1,9 +1,9 @@
 plugins {
-    id("com.github.ben-manes.versions") version "0.26.0"
+    id("com.github.ben-manes.versions") version "0.36.0"
     id("java")
     id("java-gradle-plugin")
-    id("com.gradle.plugin-publish") version "0.10.1"
-    id("org.jetbrains.kotlin.jvm") version "1.3.50"
+    id("com.gradle.plugin-publish") version "0.12.0"
+    id("org.jetbrains.kotlin.jvm") version "1.4.21"
     id("maven-publish")
     id("signing")
 //    id("se.eelde.build-optimizations") version "0.1.2"
@@ -65,12 +65,12 @@ tasks.withType<Test> {
 }
 
 dependencies {
-    implementation(kotlin("stdlib"))
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.21")
     implementation(gradleApi())
     testImplementation(gradleTestKit())
-    testImplementation("com.google.truth:truth:1.0")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.5.2")
+    testImplementation("com.google.truth:truth:1.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
 }
 
 // Use java-gradle-plugin to generate plugin descriptors and specify plugin ids

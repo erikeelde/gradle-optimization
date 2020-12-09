@@ -62,6 +62,7 @@ org.gradle.parallel=true
 org.gradle.daemon=true
 org.gradle.configureondemand=true
 org.gradle.caching=true
+org.gradle.vfs.watch=true
         """
         )
 

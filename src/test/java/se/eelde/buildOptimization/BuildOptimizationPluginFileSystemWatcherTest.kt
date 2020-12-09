@@ -3,13 +3,12 @@ package se.eelde.buildOptimization
 import com.google.common.truth.Truth.assertThat
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.io.TempDir
 import java.io.File
 
-internal class BuildOptimizationPluginTest {
+internal class BuildOptimizationPluginFileSystemWatcherTest {
 
     @TempDir
     lateinit var testProjectDir: File
@@ -30,101 +29,7 @@ internal class BuildOptimizationPluginTest {
     }
 
     @Test
-    fun `test failed result with xmx too low`() {
-
-        buildFile.writeText(
-            """
-            plugins {
-                id 'se.eelde.build_optimization'
-            }
-            
-            buildOptimization {
-                jvmXmx '4GB'
-            }
-        """
-        )
-
-        File(testProjectDir, "gradle.properties").writeText(
-            """
-org.gradle.parallel=true
-org.gradle.daemon=true
-org.gradle.configureondemand=true
-org.gradle.caching=true
-
-org.gradle.jvmargs=-Xmx1g
-        """
-        )
-
-        @Suppress("UnstableApiUsage")
-        val build = GradleRunner.create()
-            .withEnvironment(mapOf())
-            .withProjectDir(testProjectDir)
-            .withArguments("checkBuildOptimizations")
-            .withPluginClasspath()
-            .buildAndFail()
-
-        assertTrue(build.output.contains("Expecting more jvm xmx memory to be defined"), build.output)
-
-        build.tasks[0].also { buildTask ->
-            assertThat(buildTask.outcome).isEqualTo(TaskOutcome.FAILED)
-        }
-    }
-
-    @Test
-    fun `test failed result with xms too low`() {
-
-        buildFile.writeText(
-            """
-            plugins {
-                id 'se.eelde.build_optimization'
-            }
-            
-            buildOptimization {
-                jvmXms '500MB'
-            }
-        """
-        )
-
-        File(testProjectDir, "gradle.properties").writeText(
-            """
-org.gradle.parallel=true
-org.gradle.daemon=true
-org.gradle.configureondemand=true
-org.gradle.caching=true
-
-org.gradle.jvmargs=-Xms300m
-        """
-        )
-
-        @Suppress("UnstableApiUsage")
-        val build = GradleRunner.create()
-            .withEnvironment(mapOf())
-            .withProjectDir(testProjectDir)
-            .withArguments("checkBuildOptimizations")
-            .withPluginClasspath()
-            .buildAndFail()
-
-        assertTrue(build.output.contains("Expecting more jvm xms memory to be defined"), build.output)
-
-        build.tasks[0].also { buildTask ->
-            assertThat(buildTask.outcome).isEqualTo(TaskOutcome.FAILED)
-        }
-    }
-
-    @Test
-    fun `test successful result with all optimizations enabled`() {
-        buildFile.writeText(
-            """
-            plugins {
-                id 'se.eelde.build_optimization'
-            }
-            
-            buildOptimization {
-                jvmXms '500MB'
-                jvmXmx '4GB'
-            }
-        """
-        )
+    fun `test passing result with file system checker disabled on gradle 6_7_1`() {
 
         File(testProjectDir, "gradle.properties").writeText(
             """
@@ -133,12 +38,12 @@ org.gradle.daemon=true
 org.gradle.configureondemand=true
 org.gradle.caching=true
 org.gradle.vfs.watch=true
-org.gradle.jvmargs=-Xmx5g -Xms600m
         """
         )
 
         @Suppress("UnstableApiUsage")
         val build = GradleRunner.create()
+            .withGradleVersion("6.7.1")
             .withEnvironment(mapOf())
             .withProjectDir(testProjectDir)
             .withArguments("checkBuildOptimizations")
@@ -151,26 +56,26 @@ org.gradle.jvmargs=-Xmx5g -Xms600m
     }
 
     @Test
-    fun `test failing result with parallel builds disabled`() {
+    fun `test failing result with file system checker disabled on gradle 6_7_1`() {
 
         File(testProjectDir, "gradle.properties").writeText(
             """
-org.gradle.parallel=false
+org.gradle.parallel=true
 org.gradle.daemon=true
 org.gradle.configureondemand=true
 org.gradle.caching=true
+org.gradle.vfs.watch=false
         """
         )
 
         @Suppress("UnstableApiUsage")
         val build = GradleRunner.create()
+            .withGradleVersion("6.7.1")
             .withEnvironment(mapOf())
             .withProjectDir(testProjectDir)
             .withArguments("checkBuildOptimizations")
             .withPluginClasspath()
             .buildAndFail()
-
-        assertTrue(build.output.contains("Builds are not being paralleled"), build.output)
 
         build.tasks[0].also { buildTask ->
             assertThat(buildTask.outcome).isEqualTo(TaskOutcome.FAILED)
@@ -178,20 +83,21 @@ org.gradle.caching=true
     }
 
     @Test
-    fun `test failing result with daemon disabled`() {
+    fun `test passing result with file system checker disabled on gradle 6_5_1`() {
 
         File(testProjectDir, "gradle.properties").writeText(
             """
 org.gradle.parallel=true
-org.gradle.daemon=false
+org.gradle.daemon=true
 org.gradle.configureondemand=true
 org.gradle.caching=true
-org.gradle.vfs.watch=true
+org.gradle.unsafe.watch-fs=true
         """
         )
 
         @Suppress("UnstableApiUsage")
         val build = GradleRunner.create()
+            .withGradleVersion("6.5.1")
             .withEnvironment(mapOf())
             .withProjectDir(testProjectDir)
             .withArguments("checkBuildOptimizations")
@@ -204,29 +110,57 @@ org.gradle.vfs.watch=true
     }
 
     @Test
-    fun `test failing result with caching disabled`() {
+    fun `test failing result with file system checker disabled on gradle 6_5_1`() {
 
         File(testProjectDir, "gradle.properties").writeText(
             """
 org.gradle.parallel=true
 org.gradle.daemon=true
 org.gradle.configureondemand=true
-org.gradle.caching=false
+org.gradle.caching=true
+org.gradle.unsafe.watch-fs=false
         """
         )
 
         @Suppress("UnstableApiUsage")
         val build = GradleRunner.create()
+            .withGradleVersion("6.5.1")
             .withEnvironment(mapOf())
             .withProjectDir(testProjectDir)
             .withArguments("checkBuildOptimizations")
             .withPluginClasspath()
             .buildAndFail()
 
-        assertTrue(build.output.contains("Builds are not making use of the gradle cache"), build.output)
-
         build.tasks[0].also { buildTask ->
             assertThat(buildTask.outcome).isEqualTo(TaskOutcome.FAILED)
+        }
+    }
+
+    @Test
+    fun `test successful result with gradle 6_4`() {
+
+        File(testProjectDir, "gradle.properties").writeText(
+            """
+org.gradle.parallel=true
+org.gradle.daemon=true
+org.gradle.configureondemand=true
+org.gradle.caching=true
+org.gradle.vfs.watch=false
+org.gradle.unsafe.watch-fs=false
+        """
+        )
+
+        @Suppress("UnstableApiUsage")
+        val build = GradleRunner.create()
+            .withGradleVersion("6.4.1")
+            .withEnvironment(mapOf())
+            .withProjectDir(testProjectDir)
+            .withArguments("checkBuildOptimizations")
+            .withPluginClasspath()
+            .build()
+
+        build.tasks[0].also { buildTask ->
+            assertThat(buildTask.outcome).isEqualTo(TaskOutcome.SUCCESS)
         }
     }
 }

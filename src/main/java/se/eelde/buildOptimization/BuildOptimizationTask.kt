@@ -5,6 +5,7 @@ import org.gradle.api.GradleException
 import org.gradle.api.internal.project.DefaultProject
 import org.gradle.api.tasks.TaskAction
 import se.eelde.buildOptimization.evaluators.DaemonExecutionEvaluator
+import se.eelde.buildOptimization.evaluators.FileWatcherEvaluator
 import se.eelde.buildOptimization.evaluators.StartParameterEvaluator
 
 open class BuildOptimizationTask : DefaultTask() {
@@ -20,6 +21,23 @@ open class BuildOptimizationTask : DefaultTask() {
         // buildOptimizationOutputter.greatInfo()
 
         var optimizationsMissing = false
+
+        val fileWatcherEvaluator = FileWatcherEvaluator(project as DefaultProject)
+        val fileSystemWatcherCheck = Check.FileSystemWatcher()
+        when (fileWatcherEvaluator.isWatchFileSystem) {
+            FileWatcherEvaluator.Result.Watching,
+            FileWatcherEvaluator.Result.WatchingUnstable,
+            FileWatcherEvaluator.Result.NotApplicable -> {
+                // output this if the task is explicity invoked?
+                // buildOptimizationOutputter.printPraise(cacheCheck)
+            }
+            FileWatcherEvaluator.Result.NotWatching -> {
+                buildOptimizationOutputter.printCheck(fileSystemWatcherCheck)
+                if (fileSystemWatcherCheck.aDefault == CheckSeverity.ENABLED_ENFORCED) {
+                    optimizationsMissing = true
+                }
+            }
+        }
 
         val daemonCheck = Check.Daemon()
         val daemonExecutionEvaluator = DaemonExecutionEvaluator(project as DefaultProject)
@@ -37,7 +55,7 @@ open class BuildOptimizationTask : DefaultTask() {
         val startParameterEvaluator = StartParameterEvaluator(project as DefaultProject)
 
         val parallelCheck = Check.Parallel()
-        if (!startParameterEvaluator.isParalellExecutionEnabled) {
+        if (!startParameterEvaluator.isParallelExecutionEnabled) {
             buildOptimizationOutputter.printCheck(parallelCheck)
             if (parallelCheck.aDefault == CheckSeverity.ENABLED_ENFORCED) {
                 optimizationsMissing = true

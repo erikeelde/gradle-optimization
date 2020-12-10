@@ -1,4 +1,4 @@
-package se.eelde.build_optimization
+package se.eelde.buildOptimization
 
 class CiChecker(private val environmentVariables: Map<String, String>) {
 

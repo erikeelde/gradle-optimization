@@ -1,11 +1,11 @@
-package se.eelde.build_optimization.evaluators
+package se.eelde.buildOptimization.evaluators
 
 import org.gradle.StartParameter
 import org.gradle.api.internal.project.DefaultProject
 
 class StartParameterEvaluator(private val project: DefaultProject) {
 
-    val startParameter: StartParameter
+    private val startParameter: StartParameter
         get() {
             return project.services.get(StartParameter::class.java)
         }

@@ -1,4 +1,4 @@
-package se.eelde.build_optimization
+package se.eelde.buildOptimization
 
 import org.gradle.api.internal.project.DefaultProject
 import org.gradle.api.logging.LogLevel
@@ -16,11 +16,13 @@ class BuildOptimizationOutputter(var logger: Logger, defaultProject: DefaultProj
     }
 
     fun greatInfo() {
-        logger.log(LogLevel.LIFECYCLE,
-                """great info: https://proandroiddev.com/gradle-perf-9c11b640f329
+        logger.log(
+            LogLevel.LIFECYCLE,
+            """great info: https://proandroiddev.com/gradle-perf-9c11b640f329
                     | https://docs.gradle.org/current/userguide/command_line_interface.html#sec:command_line_performance
 
-                """.trimMargin())
+                """.trimMargin()
+        )
     }
 
     internal fun printCheck(check: Check) {
@@ -31,8 +33,8 @@ class BuildOptimizationOutputter(var logger: Logger, defaultProject: DefaultProj
         when (check.aDefault) {
             CheckSeverity.ENABLED_ENFORCED ->
                 styledTextOutput
-                        .style(StyledTextOutput.Style.Failure)
-                        .text(sb.toString())
+                    .style(StyledTextOutput.Style.Failure)
+                    .text(sb.toString())
             CheckSeverity.ENABLED_RECOMMENDED ->
                 logger.log(LogLevel.LIFECYCLE, sb.toString())
         }

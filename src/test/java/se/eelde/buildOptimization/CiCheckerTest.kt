@@ -1,4 +1,4 @@
-package se.eelde.build_optimization
+package se.eelde.buildOptimization
 
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -28,9 +28,13 @@ internal class CiCheckerTest {
 
     @Test
     fun `test running on jenkins CI`() {
-        val ciChecker = CiChecker(mapOf("BUILD_NUMBER" to "1",
+        val ciChecker = CiChecker(
+            mapOf(
+                "BUILD_NUMBER" to "1",
                 "BUILD_ID" to "id:1",
-                "BUILD_URL" to "http://build_url/"))
+                "BUILD_URL" to "http://build_url/"
+            )
+        )
 
         assertTrue(ciChecker.isJenkis())
     }

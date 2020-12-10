@@ -1,4 +1,4 @@
-package se.eelde.build_optimization
+package se.eelde.buildOptimization
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
@@ -9,7 +9,9 @@ class JvmArgsParserTest {
     fun testNoJvmMaxMem() {
         val jvmArgParser = JvmArgsParser()
         assertThat(jvmArgParser.parseJvmXmxMemory("")).isEqualTo(Memory.UNDEFINED)
-        assertThat(jvmArgParser.parseJvmXmxMemory("-XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError")).isEqualTo(Memory.UNDEFINED)
+        assertThat(jvmArgParser.parseJvmXmxMemory("-XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError")).isEqualTo(
+            Memory.UNDEFINED
+        )
     }
 
     @Test
@@ -18,7 +20,9 @@ class JvmArgsParserTest {
         assertThat(jvmArgParser.parseJvmXmxMemory("-Xmx2000m -Xms500m")).isEqualTo(Memory.Megabyte(2000))
         assertThat(jvmArgParser.parseJvmXmsMemory("-Xmx2000m -Xms500m")).isEqualTo(Memory.Megabyte(500))
         assertThat(jvmArgParser.parseJvmXmxMemory("a -Xmx2000m a")).isEqualTo(Memory.Megabyte(2000))
-        assertThat(jvmArgParser.parseJvmXmxMemory("-Xmx2000m -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=CRLF")).isEqualTo(Memory.Megabyte(2000))
+        assertThat(jvmArgParser.parseJvmXmxMemory("-Xmx2000m -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=CRLF")).isEqualTo(
+            Memory.Megabyte(2000)
+        )
     }
 
     @Test

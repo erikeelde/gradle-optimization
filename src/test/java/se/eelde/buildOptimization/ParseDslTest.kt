@@ -1,4 +1,4 @@
-package se.eelde.build_optimization
+package se.eelde.buildOptimization
 
 import com.google.common.truth.Truth.assertThat
 import org.gradle.api.internal.project.DefaultProject
@@ -25,14 +25,16 @@ internal class ParseDslTest {
     @Test
     fun `verify that dsl can be properly parsed`() {
 
-        buildFile.writeText("""
+        buildFile.writeText(
+            """
             apply plugin: "se.eelde.build_optimization"
 
             buildOptimization {
                 jvmXmx '4GB'
                 jvmXms '500MB'
             }
-        """)
+        """
+        )
 
         val project = ProjectBuilder.builder().withProjectDir(testProjectDir).build()
         (project as DefaultProject).evaluate()
@@ -46,26 +48,30 @@ internal class ParseDslTest {
 
     @Test
     fun `test successful result with all optimizations enabled`() {
-        buildFile.writeText("""
+        buildFile.writeText(
+            """
             plugins {
                 id 'se.eelde.build_optimization'
             }
-        """)
+        """
+        )
 
-        File(testProjectDir, "gradle.properties").writeText("""
+        File(testProjectDir, "gradle.properties").writeText(
+            """
 org.gradle.parallel=true
 org.gradle.daemon=true
 org.gradle.configureondemand=true
 org.gradle.caching=true
-        """)
+        """
+        )
 
         @Suppress("UnstableApiUsage")
         val build = GradleRunner.create()
-                .withEnvironment(mapOf())
-                .withProjectDir(testProjectDir)
-                .withArguments("checkBuildOptimizations")
-                .withPluginClasspath()
-                .build()
+            .withEnvironment(mapOf())
+            .withProjectDir(testProjectDir)
+            .withArguments("checkBuildOptimizations")
+            .withPluginClasspath()
+            .build()
 
         assertThat(build.tasks[0].outcome).isEqualTo(TaskOutcome.SUCCESS)
     }

@@ -1,4 +1,4 @@
-package se.eelde.build_optimization
+package se.eelde.buildOptimization
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project

@@ -1,4 +1,4 @@
-package se.eelde.build_optimization.evaluators
+package se.eelde.buildOptimization.evaluators
 
 import org.gradle.api.internal.project.DefaultProject
 

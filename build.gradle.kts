@@ -6,7 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.3.50"
     id("maven-publish")
     id("signing")
-    id("se.eelde.build-optimizations") version "0.1.2"
+//    id("se.eelde.build-optimizations") version "0.1.2"
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
     id("io.gitlab.arturbosch.detekt") version "1.14.2"
 }

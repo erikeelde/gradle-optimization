@@ -59,6 +59,5 @@ class BuildOptimizationOutputter(var logger: Logger, defaultProject: DefaultProj
             CiChecker.DetektedCi.TeamCity ->
                 logger.log(LogLevel.LIFECYCLE, "Build running on TeamCity - ignoring gradle optimization-checks.")
         }
-
     }
 }

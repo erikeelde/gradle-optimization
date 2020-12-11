@@ -2,11 +2,47 @@ package se.eelde.buildOptimization
 
 class CiChecker(private val environmentVariables: Map<String, String>) {
 
-    fun isCi(): Boolean {
-        return isCircleCi() || isTravis() || isJenkis() || isTeamCity()
+    sealed class DetektedCi {
+        object Generic : DetektedCi()
+        object GithubActions : DetektedCi()
+        object Travis : DetektedCi()
+        object Circle : DetektedCi()
+        object Jenkins : DetektedCi()
+        object TeamCity : DetektedCi()
     }
 
-    fun isTravis(): Boolean {
+    fun detectedCi(): DetektedCi? {
+        return when {
+            isTeamCity() -> DetektedCi.TeamCity
+            isJenkis() -> DetektedCi.Jenkins
+            isCircleCi() -> DetektedCi.Circle
+            isTravis() -> DetektedCi.Travis
+            isGithubAction() -> DetektedCi.GithubActions
+            isGenericCi() -> DetektedCi.Generic
+            else -> null
+        }
+    }
+
+    private fun isGenericCi(): Boolean {
+        /**
+         * CI=true
+         */
+        return environmentVariables["CI"]?.toBoolean() ?: false
+    }
+
+    private fun isGithubAction(): Boolean {
+        /**
+         * https://docs.github.com/en/free-pro-team@latest/actions/reference/environment-variables#default-environment-variables
+         * CI=true
+         */
+
+        val ci: Boolean = environmentVariables["CI"]?.toBoolean() ?: false
+        val githubAction: Boolean = environmentVariables["GITHUB_ACTION"] != null
+
+        return ci && githubAction
+    }
+
+    private fun isTravis(): Boolean {
         /**
          * https://docs.travis-ci.com/user/environment-variables/
          * CI=true
@@ -18,7 +54,7 @@ class CiChecker(private val environmentVariables: Map<String, String>) {
         return ci && travis
     }
 
-    fun isCircleCi(): Boolean {
+    private fun isCircleCi(): Boolean {
         /**
          * https://circleci.com/docs/2.0/env-vars/#example-configuration-of-environment-variables
          * CI=true
@@ -30,7 +66,7 @@ class CiChecker(private val environmentVariables: Map<String, String>) {
         return ci && circleci
     }
 
-    fun isJenkis(): Boolean {
+    private fun isJenkis(): Boolean {
         /**
          * https://wiki.jenkins.io/display/JENKINS/Building+a+software+project
          */
@@ -40,7 +76,7 @@ class CiChecker(private val environmentVariables: Map<String, String>) {
         return buildNumber != null && buildId != null && buildUrl != null
     }
 
-    fun isTeamCity(): Boolean {
+    private fun isTeamCity(): Boolean {
         /**
          * https://confluence.jetbrains.com/display/TCD9/Predefined+Build+Parameters
          */

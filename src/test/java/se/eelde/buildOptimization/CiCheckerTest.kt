@@ -1,6 +1,6 @@
 package se.eelde.buildOptimization
 
-import org.junit.jupiter.api.Assertions.assertTrue
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 internal class CiCheckerTest {
@@ -9,21 +9,21 @@ internal class CiCheckerTest {
     fun `test running on circle CI`() {
         val ciChecker = CiChecker(mapOf("CI" to "true", "CIRCLECI" to "true"))
 
-        assertTrue(ciChecker.isCircleCi())
+        assertEquals(CiChecker.DetektedCi.Circle, ciChecker.detectedCi())
     }
 
     @Test
     fun `test running on travis CI`() {
         val ciChecker = CiChecker(mapOf("CI" to "true", "TRAVIS" to "true"))
 
-        assertTrue(ciChecker.isTravis())
+        assertEquals(CiChecker.DetektedCi.Travis, ciChecker.detectedCi())
     }
 
     @Test
     fun `test running on teamcity CI`() {
         val ciChecker = CiChecker(mapOf("TEAMCITY_VERSION" to "1.0.0.0"))
 
-        assertTrue(ciChecker.isTeamCity())
+        assertEquals(CiChecker.DetektedCi.TeamCity, ciChecker.detectedCi())
     }
 
     @Test
@@ -36,6 +36,29 @@ internal class CiCheckerTest {
             )
         )
 
-        assertTrue(ciChecker.isJenkis())
+        assertEquals(CiChecker.DetektedCi.Jenkins, ciChecker.detectedCi())
+    }
+
+    @Test
+    fun `test running on github actions`() {
+        val ciChecker = CiChecker(
+            mapOf(
+                "CI" to "true",
+                "GITHUB_ACTION" to "globallyUnique"
+            )
+        )
+
+        assertEquals(CiChecker.DetektedCi.GithubActions, ciChecker.detectedCi())
+    }
+
+    @Test
+    fun `test running on ci`() {
+        val ciChecker = CiChecker(
+            mapOf(
+                "CI" to "true"
+            )
+        )
+
+        assertEquals(CiChecker.DetektedCi.Generic, ciChecker.detectedCi())
     }
 }

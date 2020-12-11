@@ -11,20 +11,25 @@ class BuildOptimizationPlugin : Plugin<Project> {
 
     override fun apply(project: Project) {
 
-        buildOptimizationOutputter = BuildOptimizationOutputter(defaultProject = (project as DefaultProject), logger = project.logger)
+        buildOptimizationOutputter =
+            BuildOptimizationOutputter(defaultProject = (project as DefaultProject), logger = project.logger)
 
         val ciChecker = CiChecker(System.getenv())
-        buildOptimizationPluginExtension = project.extensions.create("buildOptimization", BuildOptimizationPluginExtension::class.java)
+        buildOptimizationPluginExtension =
+            project.extensions.create("buildOptimization", BuildOptimizationPluginExtension::class.java)
 
-        if (ciChecker.isCi()) {
-            buildOptimizationOutputter.printRunningOnCi()
+        val detektedCi = ciChecker.detectedCi()
+        if (detektedCi != null) {
+            buildOptimizationOutputter.printRunningOnCi(detektedCi)
             return
         }
 
-        val buildOptimizationTask = project.tasks.register("checkBuildOptimizations", BuildOptimizationTask::class.java) { task ->
-            task.buildOptimizationOutputter = buildOptimizationOutputter
-            task.buildOptimizationPluginExtension = buildOptimizationPluginExtension as BuildOptimizationPluginExtension
-        }
+        val buildOptimizationTask =
+            project.tasks.register("checkBuildOptimizations", BuildOptimizationTask::class.java) { task ->
+                task.buildOptimizationOutputter = buildOptimizationOutputter
+                task.buildOptimizationPluginExtension =
+                    buildOptimizationPluginExtension as BuildOptimizationPluginExtension
+            }
 
         project.afterEvaluate {
             for (task in it.tasks) {

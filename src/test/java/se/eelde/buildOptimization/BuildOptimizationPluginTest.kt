@@ -151,7 +151,7 @@ org.gradle.jvmargs=-Xmx5g -Xms600m
     }
 
     @Test
-    fun `test failing result with parallel buils disabled`() {
+    fun `test failing result with parallel builds disabled`() {
 
         File(testProjectDir, "gradle.properties").writeText(
             """
@@ -227,30 +227,5 @@ org.gradle.caching=false
         build.tasks[0].also { buildTask ->
             assertThat(buildTask.outcome).isEqualTo(TaskOutcome.FAILED)
         }
-    }
-
-    @Test
-    fun `test task not added on ci`() {
-
-        File(testProjectDir, "gradle.properties").writeText(
-            """
-org.gradle.parallel=true
-org.gradle.daemon=true
-org.gradle.configureondemand=true
-org.gradle.caching=true
-        """
-        )
-
-        @Suppress("UnstableApiUsage")
-        val build = GradleRunner.create()
-            .withEnvironment(mapOf("CI" to "true", "CIRCLECI" to "true"))
-            .withProjectDir(testProjectDir)
-            .withArguments("checkBuildOptimizations")
-            .withPluginClasspath()
-            .buildAndFail()
-
-        assertTrue(build.output.contains("Build running on CI - ignoring gradle optimization-checks."), build.output)
-
-        assertThat(build.tasks.size).isEqualTo(0)
     }
 }

@@ -44,7 +44,21 @@ class BuildOptimizationOutputter(var logger: Logger, defaultProject: DefaultProj
         logger.log(LogLevel.LIFECYCLE, check.praise)
     }
 
-    fun printRunningOnCi() {
-        logger.log(LogLevel.LIFECYCLE, "Build running on CI - ignoring gradle optimization-checks.")
+    fun printRunningOnCi(detektedCi: CiChecker.DetektedCi) {
+        when (detektedCi) {
+            CiChecker.DetektedCi.Generic ->
+                logger.log(LogLevel.LIFECYCLE, "Build running on CI - ignoring gradle optimization-checks.")
+            CiChecker.DetektedCi.GithubActions ->
+                logger.log(LogLevel.LIFECYCLE, "Build running on Github actions - ignoring gradle optimization-checks.")
+            CiChecker.DetektedCi.Travis ->
+                logger.log(LogLevel.LIFECYCLE, "Build running on Travis - ignoring gradle optimization-checks.")
+            CiChecker.DetektedCi.Circle ->
+                logger.log(LogLevel.LIFECYCLE, "Build running on Circle Ci - ignoring gradle optimization-checks.")
+            CiChecker.DetektedCi.Jenkins ->
+                logger.log(LogLevel.LIFECYCLE, "Build running on Jenkins - ignoring gradle optimization-checks.")
+            CiChecker.DetektedCi.TeamCity ->
+                logger.log(LogLevel.LIFECYCLE, "Build running on TeamCity - ignoring gradle optimization-checks.")
+        }
+
     }
 }

@@ -1,12 +1,11 @@
-package se.eelde.build_optimization
+package se.eelde.buildOptimization
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.internal.project.DefaultProject
 import org.gradle.api.tasks.TaskAction
-import se.eelde.build_optimization.evaluators.DaemonExecutionEvaluator
-import se.eelde.build_optimization.evaluators.MemoryEvaluator
-import se.eelde.build_optimization.evaluators.StartParameterEvaluator
+import se.eelde.buildOptimization.evaluators.DaemonExecutionEvaluator
+import se.eelde.buildOptimization.evaluators.StartParameterEvaluator
 
 open class BuildOptimizationTask : DefaultTask() {
 
@@ -14,6 +13,7 @@ open class BuildOptimizationTask : DefaultTask() {
     internal lateinit var buildOptimizationPluginExtension: BuildOptimizationPluginExtension
 
     @TaskAction
+    @Suppress("LongMethod", "ComplexMethod")
     fun moduleTask() {
 
         // output this if the task is explicity invoked?
@@ -68,9 +68,6 @@ open class BuildOptimizationTask : DefaultTask() {
             // output this if the task is explicity invoked?
             // buildOptimizationOutputter.printPraise(configureOnDemandCheck)
         }
-
-        val memoryEvaluator = MemoryEvaluator(project as DefaultProject)
-        val jvmMemory = memoryEvaluator.getMaxMemory / 1000000
 
         if (project.extensions.extraProperties.has("org.gradle.jvmargs")) {
             val jvmArgs = project.extensions.extraProperties["org.gradle.jvmargs"]?.toString() ?: ""

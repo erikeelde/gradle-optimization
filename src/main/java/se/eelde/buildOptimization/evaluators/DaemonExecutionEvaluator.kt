@@ -1,4 +1,4 @@
-package se.eelde.build_optimization.evaluators
+package se.eelde.buildOptimization.evaluators
 
 import org.gradle.api.internal.project.DefaultProject
 import org.gradle.launcher.daemon.context.DaemonContext
@@ -11,7 +11,7 @@ class DaemonExecutionEvaluator(private val project: DefaultProject) {
         get() {
             try {
                 return project.services.get(DaemonScanInfo::class.java)
-            } catch (t: Throwable) {
+            } catch (ignored: Throwable) {
             }
             return null
         }
@@ -20,7 +20,7 @@ class DaemonExecutionEvaluator(private val project: DefaultProject) {
         get() {
             try {
                 return project.services.get(DaemonMemoryStatus::class.java)
-            } catch (t: Throwable) {
+            } catch (ignored: Throwable) {
             }
             return null
         }
@@ -29,7 +29,7 @@ class DaemonExecutionEvaluator(private val project: DefaultProject) {
         get() {
             try {
                 return project.services.get(DaemonContext::class.java)
-            } catch (t: Throwable) {
+            } catch (ignored: Throwable) {
             }
             return null
         }
@@ -38,7 +38,7 @@ class DaemonExecutionEvaluator(private val project: DefaultProject) {
         get() {
             try {
                 return project.services.get(DaemonRunningStats::class.java)
-            } catch (t: Throwable) {
+            } catch (ignored: Throwable) {
             }
             return null
         }

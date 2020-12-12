@@ -53,6 +53,17 @@ sealed class Check(val aDefault: CheckSeverity, val link: String, val hints: Lis
         praise = "Using configure on demand :+1"
     )
 
+    class FileSystemWatcher : Check(
+        aDefault = CheckSeverity.ENABLED_ENFORCED,
+        link = "https://blog.gradle.org/introducing-file-system-watching",
+        hints = listOf(
+            "Builds are not using file system watching",
+            "To enable: add 'org.gradle.vfs.watch=true' to your gradle.properties",
+            "Run with --watch-fs on the command-line"
+        ),
+        praise = "File system watcher enabled :+1"
+    )
+
     class JvmXmx(val size: Memory) : Check(
         aDefault = CheckSeverity.ENABLED_ENFORCED,
         link = "https://docs.gradle.org/current/userguide/build_environment.html#sec:configuring_jvm_memory",

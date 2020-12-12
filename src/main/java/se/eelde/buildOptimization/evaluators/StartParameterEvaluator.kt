@@ -16,7 +16,7 @@ class StartParameterEvaluator(private val project: DefaultProject) {
             return startParameter.isConfigureOnDemand
         }
 
-    val isParalellExecutionEnabled: Boolean
+    val isParallelExecutionEnabled: Boolean
         get() {
             return startParameter.isParallelProjectExecutionEnabled
         }

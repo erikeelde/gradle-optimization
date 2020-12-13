@@ -7,7 +7,7 @@ plugins {
     id("maven-publish")
     id("signing")
     // use this dependency to run plugin from plugin repository
-    // id("se.eelde.build-optimizations") version "0.1.2"
+    id("se.eelde.build-optimizations") version "0.2.0"
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
     id("io.gitlab.arturbosch.detekt") version "1.14.2"
 }
@@ -15,17 +15,17 @@ plugins {
 buildscript {
     // use this dependency to run plugin locally
     // dependencies {
-    //     classpath("se.eelde.build-optimizations:se.eelde.build-optimizations.gradle.plugin:0.1.3-SNAPSHOT")
+    //     classpath("se.eelde.build-optimizations:se.eelde.build-optimizations.gradle.plugin:0.2.0")
     // }
     repositories {
-        jcenter()
+        mavenCentral()
         mavenLocal()
     }
 }
 
 allprojects {
     repositories {
-        jcenter()
+        mavenCentral()
     }
 }
 
@@ -47,7 +47,12 @@ detekt {
     autoCorrect = true
 }
 
-// apply(plugin= "se.eelde.build-optimizations")
+apply(plugin = "se.eelde.build-optimizations")
+
+buildOptimization {
+    jvmXmx = "2GB"
+    jvmXms = "500MB"
+}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8

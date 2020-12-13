@@ -11,7 +11,7 @@ Plugin published [here](https://plugins.gradle.org/plugin/se.eelde.build-optimiz
 ##### Use it
 ```kotlin
 plugins {
-  id("se.eelde.build-optimizations") version "0.1.1"
+  id("se.eelde.build-optimizations") version "0.2.0"
 }
 ```
 
@@ -23,7 +23,7 @@ plugins {
 ```kotlin
 buildscript {
     dependencies {
-        classpath("se.eelde.build-optimizations:se.eelde.build-optimizations.gradle.plugin:0.1.1")
+        classpath("se.eelde.build-optimizations:se.eelde.build-optimizations.gradle.plugin:0.2.0")
     }
 }
 
@@ -49,3 +49,4 @@ Checks are [here](src/main/java/se/eelde/build_optimization/Check.kt)
 * Default File encoding
 * Require a specific setting of jvmXmx (default -Xmx=2g)
 * Require a specific setting of jvmXms (default -Xms=500m)
+* Require file system watcher to be enabled after gradle 6.5

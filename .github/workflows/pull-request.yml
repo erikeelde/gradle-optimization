@@ -22,7 +22,7 @@ jobs:
           java-version: 11
 
       - name: Run verifications
-        run: ./gradlew detekt ktLintCheck test
+        run: ./gradlew validatePlugin detekt ktLintCheck test
 
       - name: Upload reports
         uses: actions/upload-artifact@v2

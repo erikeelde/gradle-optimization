@@ -6,15 +6,17 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "1.4.21"
     id("maven-publish")
     id("signing")
-//    id("se.eelde.build-optimizations") version "0.1.2"
+    // use this dependency to run plugin from plugin repository
+    // id("se.eelde.build-optimizations") version "0.1.2"
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
     id("io.gitlab.arturbosch.detekt") version "1.14.2"
 }
 
 buildscript {
-//    dependencies {
-//        classpath("se.eelde.build-optimizations:se.eelde.build-optimizations.gradle.plugin:0.1.2")
-//    }
+    // use this dependency to run plugin locally
+    // dependencies {
+    //     classpath("se.eelde.build-optimizations:se.eelde.build-optimizations.gradle.plugin:0.1.3-SNAPSHOT")
+    // }
     repositories {
         jcenter()
         mavenLocal()
@@ -31,7 +33,6 @@ detekt {
     autoCorrect = true
     buildUponDefaultConfig = true
     config = files("$projectDir/config/detekt/detekt.yml")
-//    baseline = file("$projectDir/config/detekt/baseline.xml")
 
     reports {
         html.enabled = true

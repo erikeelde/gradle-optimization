@@ -39,7 +39,8 @@ internal class ParseDslTest {
         val project = ProjectBuilder.builder().withProjectDir(testProjectDir).build()
         (project as DefaultProject).evaluate()
 
-        val buildOptimizationPlugin = project.plugins.getPlugin(BuildOptimizationPlugin::class.java) as BuildOptimizationPlugin
+        val buildOptimizationPlugin =
+            project.plugins.getPlugin(BuildOptimizationPlugin::class.java) as BuildOptimizationPlugin
         val buildOptimizationPluginExtension = buildOptimizationPlugin.buildOptimizationPluginExtension!!
 
         assertThat(buildOptimizationPluginExtension.jvmXmx).isEqualTo("4GB")

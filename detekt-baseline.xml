@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<SmellBaseline>
+  <ManuallySuppressedIssues></ManuallySuppressedIssues>
+  <CurrentIssues>
+    <ID>MaxLineLength:SemanticVersion.kt$SemanticVersion.Companion$"""^(?&lt;major&gt;0|[1-9]\d*)\.(?&lt;minor&gt;0|[1-9]\d*)\.?(?&lt;patch&gt;0|[1-9]\d*)?(?:-(?&lt;prerelease&gt;(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?&lt;buildmetadata&gt;[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?${'$'}""".toRegex()</ID>
+    <ID>MaxLineLength:SemanticVersionTest.kt$SemanticVersionTest$"""^(?&lt;major&gt;0|[1-9]\d*)\.(?&lt;minor&gt;0|[1-9]\d*)\.?(?&lt;patch&gt;0|[1-9]\d*)?(?:-(?&lt;prerelease&gt;(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?&lt;buildmetadata&gt;[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?${'$'}""".toRegex()</ID>
+    <ID>MaximumLineLength:se.eelde.buildOptimization.evaluators.SemanticVersion.kt:19</ID>
+    <ID>MaximumLineLength:se.eelde.buildOptimization.evaluators.SemanticVersionTest.kt:14</ID>
+  </CurrentIssues>
+</SmellBaseline>

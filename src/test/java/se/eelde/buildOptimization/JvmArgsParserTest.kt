@@ -20,7 +20,11 @@ class JvmArgsParserTest {
         assertThat(jvmArgParser.parseJvmXmxMemory("-Xmx2000m -Xms500m")).isEqualTo(Memory.Megabyte(2000))
         assertThat(jvmArgParser.parseJvmXmsMemory("-Xmx2000m -Xms500m")).isEqualTo(Memory.Megabyte(500))
         assertThat(jvmArgParser.parseJvmXmxMemory("a -Xmx2000m a")).isEqualTo(Memory.Megabyte(2000))
-        assertThat(jvmArgParser.parseJvmXmxMemory("-Xmx2000m -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=CRLF")).isEqualTo(
+        assertThat(
+            jvmArgParser.parseJvmXmxMemory(
+                "-Xmx2000m -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=CRLF"
+            )
+        ).isEqualTo(
             Memory.Megabyte(2000)
         )
     }
@@ -48,6 +52,12 @@ class JvmArgsParserTest {
         val jvmArgParser = JvmArgsParser()
         assertThat(jvmArgParser.parseFileEncoding("-Dfile.encoding=UTF-8")).isEqualTo(Charsets.UTF_8)
         assertThat(jvmArgParser.parseFileEncoding("a -Dfile.encoding=UTF-8 a")).isEqualTo(Charsets.UTF_8)
-        assertThat(jvmArgParser.parseFileEncoding("-Xmx2000m -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8")).isEqualTo(Charsets.UTF_8)
+        assertThat(
+            jvmArgParser.parseFileEncoding(
+                "-Xmx2000m -XX:MaxPermSize=2048m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8"
+            )
+        ).isEqualTo(
+            Charsets.UTF_8
+        )
     }
 }

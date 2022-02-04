@@ -42,7 +42,8 @@ class BuildOptimizationPlugin : Plugin<Project> {
 
 //        project.tasks.register("applyBuildOptimizations", BuildOptimizationTask::class.java) { task ->
 //            task.buildOptimizationOutputter = buildOptimizationOutputter
-//            task.buildOptimizationPluginExtension = buildOptimizationPluginExtension as BuildOptimizationPluginExtension
+//            task.buildOptimizationPluginExtension =
+//              buildOptimizationPluginExtension as BuildOptimizationPluginExtension
 //        }
     }
 }

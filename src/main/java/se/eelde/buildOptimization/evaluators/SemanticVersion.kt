@@ -11,8 +11,7 @@ data class SemanticVersion(
     val buildMetadata: String? = null
 ) {
     fun compatibleWith(version: SemanticVersion): Boolean {
-        return major == version.major &&
-            minor <= version.minor
+        return major == version.major && minor <= version.minor
     }
 
     companion object {

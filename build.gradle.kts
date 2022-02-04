@@ -8,7 +8,6 @@ plugins {
     id("signing")
     // use this dependency to run plugin from plugin repository
     // id("se.eelde.build-optimizations") version "0.2.0"
-    id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
     id("io.gitlab.arturbosch.detekt") version "1.19.0"
 }
 
@@ -32,11 +31,6 @@ allprojects {
 detekt {
     autoCorrect = true
     buildUponDefaultConfig = true
-    config = files("$projectDir/config/detekt/detekt.yml")
-
-    reports {
-        html.enabled = true
-    }
 }
 
 dependencies {
@@ -47,7 +41,7 @@ detekt {
     autoCorrect = true
 }
 
-// apply(plugin = "se.eelde.build-optimizations")
+//apply(plugin = "se.eelde.build-optimizations")
 
 //buildOptimization {
 //    jvmXmx = "2GB"

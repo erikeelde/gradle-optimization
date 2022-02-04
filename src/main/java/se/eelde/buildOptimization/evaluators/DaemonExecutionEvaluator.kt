@@ -1,10 +1,8 @@
 package se.eelde.buildOptimization.evaluators
 
 import org.gradle.api.internal.project.DefaultProject
-import org.gradle.launcher.daemon.context.DaemonContext
 import org.gradle.launcher.daemon.server.health.DaemonMemoryStatus
 import org.gradle.launcher.daemon.server.scaninfo.DaemonScanInfo
-import org.gradle.launcher.daemon.server.stats.DaemonRunningStats
 
 class DaemonExecutionEvaluator(private val project: DefaultProject) {
     private val daemonScanInfo: DaemonScanInfo?
@@ -25,23 +23,23 @@ class DaemonExecutionEvaluator(private val project: DefaultProject) {
             return null
         }
 
-    private val daemonContext: DaemonContext?
-        get() {
-            try {
-                return project.services.get(DaemonContext::class.java)
-            } catch (ignored: Throwable) {
-            }
-            return null
-        }
-
-    private val daemonRunningStats: DaemonRunningStats?
-        get() {
-            try {
-                return project.services.get(DaemonRunningStats::class.java)
-            } catch (ignored: Throwable) {
-            }
-            return null
-        }
+//    private val daemonContext: DaemonContext?
+//        get() {
+//            try {
+//                return project.services.get(DaemonContext::class.java)
+//            } catch (ignored: Throwable) {
+//            }
+//            return null
+//        }
+//
+//    private val daemonRunningStats: DaemonRunningStats?
+//        get() {
+//            try {
+//                return project.services.get(DaemonRunningStats::class.java)
+//            } catch (ignored: Throwable) {
+//            }
+//            return null
+//        }
 
     val isSingleUse: Boolean
         get() {

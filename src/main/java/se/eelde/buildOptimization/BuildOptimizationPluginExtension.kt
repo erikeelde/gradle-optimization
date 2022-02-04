@@ -40,12 +40,15 @@ open class BuildOptimizationPluginExtension {
         "k", "K" -> Memory.Kilobyte(matchResult.groupValues[sizeGroupPosition].toLong())
         "m", "M" -> Memory.Megabyte(matchResult.groupValues[sizeGroupPosition].toLong())
         "g", "G" -> Memory.Gigabyte(matchResult.groupValues[sizeGroupPosition].toLong())
-        else -> throw IllegalArgumentException("Unable to parse ${matchResult.groupValues[sizeQuantifierGroupPosition]}")
+        else -> throw IllegalArgumentException(
+            "Unable to parse ${matchResult.groupValues[sizeQuantifierGroupPosition]}"
+        )
     }
 
     @Input
     @Optional
     var jvmXmx: String? = null
+
     @Input
     @Optional
     var jvmXms: String? = null

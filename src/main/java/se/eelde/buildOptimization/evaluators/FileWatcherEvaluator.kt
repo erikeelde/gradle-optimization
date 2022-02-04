@@ -30,7 +30,7 @@ class FileWatcherEvaluator(private val project: DefaultProject) {
                     WatchMode.DISABLED -> Result.NotWatching
                     null -> Result.NotApplicable
                 }
-            } else  {
+            } else {
                 Result.NotApplicable
             }
         }

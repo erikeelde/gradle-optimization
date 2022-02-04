@@ -4,12 +4,9 @@ import org.gradle.api.tasks.Input
 import java.nio.charset.Charset
 
 class JvmArgsParser {
-    private val xmxRegExp =
-        """.*-Xmx(\d*)([kKmMgG]).*""".toRegex()
-    private val xmsRegExp =
-        """.*-Xms(\d*)([kKmMgG]).*""".toRegex()
-    private val fileEncodingRegexp =
-        """.*-Dfile.encoding=([^\s.]*).*""".toRegex()
+    private val xmxRegExp = """.*-Xmx(\d*)([kKmMgG]).*""".toRegex()
+    private val xmsRegExp = """.*-Xms(\d*)([kKmMgG]).*""".toRegex()
+    private val fileEncodingRegexp = """.*-Dfile.encoding=([^\s.]*).*""".toRegex()
 
     fun parseJvmXmsMemory(jvmArgs: String): Memory {
         val matches = xmsRegExp.matchEntire(jvmArgs)
@@ -20,7 +17,9 @@ class JvmArgsParser {
                     "k", "K" -> Memory.Kilobyte(matchResult.groupValues[sizeGroupPosition].toLong())
                     "m", "M" -> Memory.Megabyte(matchResult.groupValues[sizeGroupPosition].toLong())
                     "g", "G" -> Memory.Gigabyte(matchResult.groupValues[sizeGroupPosition].toLong())
-                    else -> throw IllegalArgumentException("Unable to parse ${matchResult.groupValues[sizeQuantifierGroupPosition]}")
+                    else -> throw IllegalArgumentException(
+                        "Unable to parse ${matchResult.groupValues[sizeQuantifierGroupPosition]}"
+                    )
                 }
             }
         }
@@ -37,7 +36,9 @@ class JvmArgsParser {
                     "k", "K" -> Memory.Kilobyte(matchResult.groupValues[sizeGroupPosition].toLong())
                     "m", "M" -> Memory.Megabyte(matchResult.groupValues[sizeGroupPosition].toLong())
                     "g", "G" -> Memory.Gigabyte(matchResult.groupValues[sizeGroupPosition].toLong())
-                    else -> throw IllegalArgumentException("Unable to parse ${matchResult.groupValues[sizeQuantifierGroupPosition]}")
+                    else -> throw IllegalArgumentException(
+                        "Unable to parse ${matchResult.groupValues[sizeQuantifierGroupPosition]}"
+                    )
                 }
             }
         }

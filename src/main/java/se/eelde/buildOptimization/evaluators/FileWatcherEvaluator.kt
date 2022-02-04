@@ -3,6 +3,7 @@ package se.eelde.buildOptimization.evaluators
 import org.gradle.StartParameter
 import org.gradle.api.internal.StartParameterInternal
 import org.gradle.api.internal.project.DefaultProject
+import org.gradle.internal.watch.vfs.WatchMode
 
 class FileWatcherEvaluator(private val project: DefaultProject) {
 
@@ -22,24 +23,14 @@ class FileWatcherEvaluator(private val project: DefaultProject) {
         get() {
             val gradleVersion = SemanticVersion.parse(project.gradle.gradleVersion)
 
-            val compatible = gradleVersion.compatibleWith(SemanticVersion.parse("6.7"))
-            // throw GradleException("oh noes: comparing $gradleVersion $compatible")
-
             return if (SemanticVersion.parse("6.7").compatibleWith(gradleVersion)) {
-                // 6.7
-                if ((startParameter as StartParameterInternal).isWatchFileSystem) {
-                    Result.Watching
-                } else {
-                    Result.NotWatching
+                when ((startParameter as StartParameterInternal).watchFileSystemMode) {
+                    WatchMode.ENABLED -> Result.Watching
+                    WatchMode.DEFAULT -> Result.Watching
+                    WatchMode.DISABLED -> Result.NotWatching
+                    null -> Result.NotApplicable
                 }
-            } else if (SemanticVersion.parse("6.5").compatibleWith(gradleVersion)) {
-                // 6.5 -> 6.6
-                if ((startParameter as StartParameterInternal).isWatchFileSystem) {
-                    Result.WatchingUnstable
-                } else {
-                    Result.NotWatching
-                }
-            } else {
+            } else  {
                 Result.NotApplicable
             }
         }

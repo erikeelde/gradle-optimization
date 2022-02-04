@@ -57,8 +57,9 @@ org.gradle.jvmargs=-Xmx1g
 
         @Suppress("UnstableApiUsage")
         val build = GradleRunner.create()
-            .withEnvironment(mapOf())
+            // .withEnvironment(mapOf())
             .withProjectDir(testProjectDir)
+            .withDebug(true)
             .withArguments("checkBuildOptimizations")
             .withPluginClasspath()
             .buildAndFail()

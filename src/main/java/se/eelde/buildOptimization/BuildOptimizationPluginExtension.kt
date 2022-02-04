@@ -1,9 +1,14 @@
 package se.eelde.buildOptimization
 
+import org.gradle.api.tasks.Input
+import org.gradle.api.tasks.Nested
+import org.gradle.api.tasks.Optional
+
 open class BuildOptimizationPluginExtension {
     private val maxRegExp =
         """(\d*)([kKmMgG])([bB])""".toRegex()
 
+    @Nested
     fun getJvmXmxMemory(): Memory {
         jvmXmx?.let { jvmXmx ->
             val matches = maxRegExp.matchEntire(jvmXmx)
@@ -17,6 +22,7 @@ open class BuildOptimizationPluginExtension {
         return Memory.Gigabyte(2)
     }
 
+    @Nested
     fun getJvmXmsMemory(): Memory {
         jvmXms?.let { jvmXms ->
             val matches = maxRegExp.matchEntire(jvmXms)
@@ -37,7 +43,11 @@ open class BuildOptimizationPluginExtension {
         else -> throw IllegalArgumentException("Unable to parse ${matchResult.groupValues[sizeQuantifierGroupPosition]}")
     }
 
+    @Input
+    @Optional
     var jvmXmx: String? = null
+    @Input
+    @Optional
     var jvmXms: String? = null
 
     companion object {

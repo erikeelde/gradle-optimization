@@ -1,5 +1,6 @@
 package se.eelde.buildOptimization
 
+import org.gradle.api.tasks.Input
 import java.nio.charset.Charset
 
 class JvmArgsParser {
@@ -77,15 +78,15 @@ sealed class Memory {
         override fun asBytes() = -1L
     }
 
-    data class Kilobyte(val size: Long) : Memory() {
+    data class Kilobyte(@Input val size: Long) : Memory() {
         override fun asBytes() = size * ONE_THOUSAND
     }
 
-    data class Megabyte(val size: Long) : Memory() {
+    data class Megabyte(@Input val size: Long) : Memory() {
         override fun asBytes() = size * ONE_THOUSAND * ONE_THOUSAND
     }
 
-    data class Gigabyte(val size: Long) : Memory() {
+    data class Gigabyte(@Input val size: Long) : Memory() {
         override fun asBytes() = size * ONE_THOUSAND * ONE_THOUSAND * ONE_THOUSAND
     }
 }

@@ -1,15 +1,15 @@
 plugins {
-    id("com.github.ben-manes.versions") version "0.36.0"
+    id("com.github.ben-manes.versions") version "0.41.0"
     id("java")
     id("java-gradle-plugin")
-    id("com.gradle.plugin-publish") version "0.12.0"
-    id("org.jetbrains.kotlin.jvm") version "1.4.21"
+    id("com.gradle.plugin-publish") version "0.20.0"
+    id("org.jetbrains.kotlin.jvm") version "1.6.10"
     id("maven-publish")
     id("signing")
     // use this dependency to run plugin from plugin repository
-    id("se.eelde.build-optimizations") version "0.2.0"
+    // id("se.eelde.build-optimizations") version "0.2.0"
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
-    id("io.gitlab.arturbosch.detekt") version "1.14.2"
+    id("io.gitlab.arturbosch.detekt") version "1.19.0"
 }
 
 buildscript {
@@ -40,19 +40,19 @@ detekt {
 }
 
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.14.2")
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.19.0")
 }
 
 detekt {
     autoCorrect = true
 }
 
-apply(plugin = "se.eelde.build-optimizations")
+// apply(plugin = "se.eelde.build-optimizations")
 
-buildOptimization {
-    jvmXmx = "2GB"
-    jvmXms = "500MB"
-}
+//buildOptimization {
+//    jvmXmx = "2GB"
+//    jvmXms = "500MB"
+//}
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
@@ -71,12 +71,12 @@ tasks.withType<Test> {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.21")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.6.10")
     implementation(gradleApi())
     testImplementation(gradleTestKit())
-    testImplementation("com.google.truth:truth:1.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+    testImplementation("com.google.truth:truth:1.1.3")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
 }
 
 // Use java-gradle-plugin to generate plugin descriptors and specify plugin ids

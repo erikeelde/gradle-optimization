@@ -3,24 +3,33 @@ package se.eelde.buildOptimization
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.internal.project.DefaultProject
-import org.gradle.api.tasks.TaskAction
+import org.gradle.api.provider.Property
+import org.gradle.api.tasks.*
 import se.eelde.buildOptimization.evaluators.DaemonExecutionEvaluator
 import se.eelde.buildOptimization.evaluators.FileWatcherEvaluator
 import se.eelde.buildOptimization.evaluators.StartParameterEvaluator
+import java.io.File
 
 open class BuildOptimizationTask : DefaultTask() {
 
-    internal lateinit var buildOptimizationOutputter: BuildOptimizationOutputter
-    internal lateinit var buildOptimizationPluginExtension: BuildOptimizationPluginExtension
+    @Nested
+    lateinit var buildOptimizationPluginExtension: BuildOptimizationPluginExtension
+
+    @OutputFile
+    val file: File = project.file("outputfile.txt")
+
+    //@Input
+    //val inputString: Property<String> = project.objects.property(String::class.java).convention("default value")
 
     @TaskAction
     @Suppress("LongMethod", "ComplexMethod")
     fun moduleTask() {
-
         // output this if the task is explicity invoked?
         // buildOptimizationOutputter.greatInfo()
 
         var optimizationsMissing = false
+
+        var buildOptimizationOutputter = BuildOptimizationOutputter(defaultProject = (project as DefaultProject), logger = project.logger)
 
         val fileWatcherEvaluator = FileWatcherEvaluator(project as DefaultProject)
         val fileSystemWatcherCheck = Check.FileSystemWatcher()

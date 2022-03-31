@@ -2,7 +2,7 @@ plugins {
     id("com.github.ben-manes.versions") version "0.36.0"
     id("java")
     id("java-gradle-plugin")
-    id("com.gradle.plugin-publish") version "0.12.0"
+    id("com.gradle.plugin-publish") version "0.21.0"
     id("org.jetbrains.kotlin.jvm") version "1.4.21"
     id("maven-publish")
     id("signing")

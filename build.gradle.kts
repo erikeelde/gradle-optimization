@@ -3,7 +3,7 @@ plugins {
     id("java")
     id("java-gradle-plugin")
     id("com.gradle.plugin-publish") version "0.12.0"
-    id("org.jetbrains.kotlin.jvm") version "1.4.21"
+    id("org.jetbrains.kotlin.jvm") version "1.7.21"
     id("maven-publish")
     id("signing")
     // use this dependency to run plugin from plugin repository

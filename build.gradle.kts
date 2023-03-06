@@ -8,7 +8,7 @@ plugins {
     id("signing")
     // use this dependency to run plugin from plugin repository
     // id("se.eelde.build-optimizations") version "0.1.2"
-    id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
+    id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
     id("io.gitlab.arturbosch.detekt") version "1.19.0"
 }
 
